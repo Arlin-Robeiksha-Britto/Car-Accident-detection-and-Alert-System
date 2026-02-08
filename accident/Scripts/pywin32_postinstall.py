@@ -63,9 +63,7 @@ root_key_name = "Software\\Python\\PythonCore\\" + sys.winver
 
 def get_root_hkey():
     try:
-        winreg.OpenKey(
-            winreg.HKEY_LOCAL_MACHINE, root_key_name, 0, winreg.KEY_CREATE_SUB_KEY
-        )
+        winreg.OpenKey(winreg.HKEY_LOCAL_MACHINE, root_key_name, 0, winreg.KEY_CREATE_SUB_KEY)
         return winreg.HKEY_LOCAL_MACHINE
     except OSError:
         # Either not exist, or no permissions to create subkey means
@@ -75,9 +73,7 @@ def get_root_hkey():
 
 # Create a function with the same signature as create_shortcut
 # previously provided by bdist_wininst
-def create_shortcut(
-    path, description, filename, arguments="", workdir="", iconpath="", iconindex=0
-):
+def create_shortcut(path, description, filename, arguments="", workdir="", iconpath="", iconindex=0):
     import pythoncom
     from win32com.shell import shell
 
@@ -135,9 +131,7 @@ def CopyTo(desc, src, dest):
                 "If you have any Python applications running, "
                 f"please close them now\nand select 'Retry'\n\n{details.strerror}"
             )
-            rc = win32api.MessageBox(
-                0, full_desc, "Installation Error", win32con.MB_ABORTRETRYIGNORE
-            )
+            rc = win32api.MessageBox(0, full_desc, "Installation Error", win32con.MB_ABORTRETRYIGNORE)
             if rc == win32con.IDABORT:
                 raise
             elif rc == win32con.IDIGNORE:
@@ -246,10 +240,9 @@ def RegisterHelpFile(register=True, lib_dir=None):
 
 
 def RegisterPythonwin(register=True, lib_dir=None):
-    """Add (or remove) Pythonwin to context menu for python scripts.
-    ??? Should probably also add Edit command for pys files also.
-    Also need to remove these keys on uninstall, but there's no function
-    to add registry entries to uninstall log ???
+    """Add (or remove) Pythonwin to context menu for python scripts. ??? Should probably also add Edit command for pys
+    files also. Also need to remove these keys on uninstall, but there's no function to add registry entries to
+    uninstall log ???
     """
     import os
 
@@ -304,9 +297,7 @@ def RegisterPythonwin(register=True, lib_dir=None):
         # tell windows about the change
         from win32com.shell import shell, shellcon
 
-        shell.SHChangeNotify(
-            shellcon.SHCNE_ASSOCCHANGED, shellcon.SHCNF_IDLIST, None, None
-        )
+        shell.SHChangeNotify(shellcon.SHCNE_ASSOCCHANGED, shellcon.SHCNF_IDLIST, None, None)
 
 
 def get_shortcuts_folder():
@@ -321,9 +312,7 @@ def get_shortcuts_folder():
         fldr = get_special_folder_path("CSIDL_PROGRAMS")
 
     try:
-        install_group = winreg.QueryValue(
-            get_root_hkey(), root_key_name + "\\InstallPath\\InstallGroup"
-        )
+        install_group = winreg.QueryValue(get_root_hkey(), root_key_name + "\\InstallPath\\InstallGroup")
     except OSError:
         install_group = "Python %d.%d" % (
             sys.version_info.major,
@@ -367,9 +356,7 @@ def fixup_dbi():
         if os.path.isfile(this_pyd) and os.path.isfile(py_name):
             try:
                 if os.path.isfile(this_dest):
-                    print(
-                        f"Old dbi '{this_dest}' already exists - deleting '{this_pyd}'"
-                    )
+                    print(f"Old dbi '{this_dest}' already exists - deleting '{this_pyd}'")
                     os.remove(this_pyd)
                 else:
                     os.rename(this_pyd, this_dest)
@@ -421,7 +408,7 @@ def install(lib_dir):
             for fname in files:
                 base = os.path.basename(fname)
                 dst = os.path.join(dest_dir, base)
-                CopyTo("installing %s" % base, fname, dst)
+                CopyTo(f"installing {base}", fname, dst)
                 if verbose:
                     print(f"Copied {base} to {dst}")
                 worked = 1
@@ -447,18 +434,16 @@ def install(lib_dir):
                 # in that place - otherwise that one will still get used!
                 if os.path.exists(dst):
                     msg = (
-                        "The file '%s' exists, but can not be replaced "
+                        f"The file '{dst}' exists, but can not be replaced "
                         "due to insufficient permissions.  You must "
-                        "reinstall this software as an Administrator" % dst
+                        "reinstall this software as an Administrator"
                     )
                     print(msg)
                     raise RuntimeError(msg)
                 continue
             raise
     else:
-        raise RuntimeError(
-            "You don't have enough permissions to install the system files"
-        )
+        raise RuntimeError("You don't have enough permissions to install the system files")
 
     # Register our demo COM objects.
     try:
@@ -627,7 +612,7 @@ def uninstall(lib_dir):
                         os.remove(dst)
                         worked = 1
                         if verbose:
-                            print("Removed file %s" % (dst))
+                            print(f"Removed file {dst}")
                     except Exception:
                         print(f"FAILED to remove {dst}")
             if worked:
@@ -645,9 +630,7 @@ def uninstall(lib_dir):
 def verify_destination(location: str) -> str:
     location = os.path.abspath(location)
     if not os.path.isdir(location):
-        raise argparse.ArgumentTypeError(
-            f'Path "{location}" is not an existing directory!'
-        )
+        raise argparse.ArgumentTypeError(f'Path "{location}" is not an existing directory!')
     return location
 
 
@@ -718,9 +701,6 @@ def main():
         except OSError:
             # child already dead
             pass
-
-    silent = args.silent
-    verbose = not args.quiet
 
     if args.install:
         install(args.destination)
