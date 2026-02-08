@@ -1,157 +1,219 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Emergency Response - Google Maps</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <style>
-        body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        #map { height: 100vh; width: 100%; }
-        .info-panel {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            z-index: 1000;
-            max-width: 350px;
-            max-height: 85vh;
-            overflow-y: auto;
-        }
-        .info-panel h3 { margin-top: 0; color: #d32f2f; border-bottom: 2px solid #d32f2f; padding-bottom: 10px; }
-        .hospital-info { background: #f5f5f5; padding: 15px; border-radius: 5px; margin: 15px 0; }
-        .hospital-name { font-size: 18px; font-weight: bold; color: #1976d2; margin-bottom: 10px; }
-        .star-rating { font-size: 20px; color: #ffa000; margin: 10px 0; }
-        .route-info { background: #e3f2fd; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #2196f3; }
-        .accident-info { background: #ffebee; padding: 15px; border-radius: 5px; margin: 15px 0; border-left: 4px solid #d32f2f; }
-        .metric-item { margin: 8px 0; display: flex; justify-content: space-between; }
-        .metric-label { color: #666; font-weight: 500; }
-        .metric-value { font-weight: bold; color: #333; }
-        .legend {
-            position: absolute;
-            bottom: 30px;
-            left: 10px;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            z-index: 1000;
-        }
-        .legend-item { margin: 8px 0; display: flex; align-items: center; }
-        .legend-icon { width: 20px; height: 20px; margin-right: 10px; border-radius: 50%; border: 2px solid #333; }
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+      #map {
+        height: 100vh;
+        width: 100%;
+      }
+      .info-panel {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        max-width: 350px;
+        max-height: 85vh;
+        overflow-y: auto;
+      }
+      .info-panel h3 {
+        margin-top: 0;
+        color: #d32f2f;
+        border-bottom: 2px solid #d32f2f;
+        padding-bottom: 10px;
+      }
+      .hospital-info {
+        background: #f5f5f5;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+      }
+      .hospital-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: #1976d2;
+        margin-bottom: 10px;
+      }
+      .star-rating {
+        font-size: 20px;
+        color: #ffa000;
+        margin: 10px 0;
+      }
+      .route-info {
+        background: #e3f2fd;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+        border-left: 4px solid #2196f3;
+      }
+      .accident-info {
+        background: #ffebee;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+        border-left: 4px solid #d32f2f;
+      }
+      .metric-item {
+        margin: 8px 0;
+        display: flex;
+        justify-content: space-between;
+      }
+      .metric-label {
+        color: #666;
+        font-weight: 500;
+      }
+      .metric-value {
+        font-weight: bold;
+        color: #333;
+      }
+      .legend {
+        position: absolute;
+        bottom: 30px;
+        left: 10px;
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+      }
+      .legend-item {
+        margin: 8px 0;
+        display: flex;
+        align-items: center;
+      }
+      .legend-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        border-radius: 50%;
+        border: 2px solid #333;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="map"></div>
     <div class="info-panel">
-        <h3>Emergency Response (Google Maps)</h3>
-        <div class="hospital-info">
-            <div class="hospital-name">&#x1f3e5; WCF Hospital T Nagar</div>
-            <div class="star-rating">Rating: ★★½☆☆ (2.5/5.0)</div>
-            
+      <h3>Emergency Response (Google Maps)</h3>
+      <div class="hospital-info">
+        <div class="hospital-name">&#x1f3e5; WCF Hospital T Nagar</div>
+        <div class="star-rating">Rating: ★★½☆☆ (2.5/5.0)</div>
+      </div>
+      <div class="route-info">
+        <h4 style="margin-top: 0">Route</h4>
+        <div class="metric-item">
+          <span class="metric-label">Distance:</span>
+          <span class="metric-value">2.61 km</span>
         </div>
-        <div class="route-info">
-            <h4 style="margin-top: 0;">Route</h4>
-            <div class="metric-item">
-                <span class="metric-label">Distance:</span>
-                <span class="metric-value">2.61 km</span>
-            </div>
+      </div>
+      <div class="accident-info">
+        <h4 style="margin-top: 0">Accident Location</h4>
+        <div class="metric-item">
+          <span class="metric-label">Lat:</span>
+          <span class="metric-value">13.074000</span>
         </div>
-        <div class="accident-info">
-            <h4 style="margin-top: 0;">Accident Location</h4>
-            <div class="metric-item">
-                <span class="metric-label">Lat:</span>
-                <span class="metric-value">13.074000</span>
-            </div>
-            <div class="metric-item">
-                <span class="metric-label">Lon:</span>
-                <span class="metric-value">80.240000</span>
-            </div>
+        <div class="metric-item">
+          <span class="metric-label">Lon:</span>
+          <span class="metric-value">80.240000</span>
         </div>
+      </div>
     </div>
     <div class="legend">
-        <h4 style="margin-top: 0;">Legend</h4>
-        <div class="legend-item">
-            <div class="legend-icon" style="background: #d32f2f;"></div>
-            <span><strong>Accident</strong></span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-icon" style="background: #1976d2;"></div>
-            <span>Hospital</span>
-        </div>
-        <div class="legend-item">
-            <div style="width: 30px; height: 5px; background: #2196f3; margin-right: 10px;"></div>
-            <span>Route</span>
-        </div>
+      <h4 style="margin-top: 0">Legend</h4>
+      <div class="legend-item">
+        <div class="legend-icon" style="background: #d32f2f"></div>
+        <span><strong>Accident</strong></span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-icon" style="background: #1976d2"></div>
+        <span>Hospital</span>
+      </div>
+      <div class="legend-item">
+        <div style="width: 30px; height: 5px; background: #2196f3; margin-right: 10px"></div>
+        <span>Route</span>
+      </div>
     </div>
 
     <script>
-        function initMap() {
-            var center = { lat: 13.062635, lng: 80.237045 };
-            var map = new google.maps.Map(document.getElementById('map'), {
-                zoom: 13,
-                center: center,
-                mapTypeId: 'roadmap'
-            });
+      function initMap() {
+        var center = { lat: 13.062635, lng: 80.237045 };
+        var map = new google.maps.Map(document.getElementById("map"), {
+          zoom: 13,
+          center: center,
+          mapTypeId: "roadmap",
+        });
 
-            // Accident marker (red)
-            var accidentMarker = new google.maps.Marker({
-                position: { lat: 13.074, lng: 80.24 },
-                map: map,
-                title: 'Accident Location',
-                icon: {
-                    path: google.maps.SymbolPath.CIRCLE,
-                    scale: 12,
-                    fillColor: '#d32f2f',
-                    fillOpacity: 1,
-                    strokeColor: '#8B0000',
-                    strokeWeight: 3
-                }
-            });
-            var accidentInfo = new google.maps.InfoWindow({
-                content: '<div style="padding:10px;"><b>ACCIDENT LOCATION</b><br>Lat: 13.074000<br>Lon: 80.240000</div>'
-            });
-            accidentMarker.addListener('click', function() { accidentInfo.open(map, accidentMarker); });
+        // Accident marker (red)
+        var accidentMarker = new google.maps.Marker({
+          position: { lat: 13.074, lng: 80.24 },
+          map: map,
+          title: "Accident Location",
+          icon: {
+            path: google.maps.SymbolPath.CIRCLE,
+            scale: 12,
+            fillColor: "#d32f2f",
+            fillOpacity: 1,
+            strokeColor: "#8B0000",
+            strokeWeight: 3,
+          },
+        });
+        var accidentInfo = new google.maps.InfoWindow({
+          content: '<div style="padding:10px;"><b>ACCIDENT LOCATION</b><br>Lat: 13.074000<br>Lon: 80.240000</div>',
+        });
+        accidentMarker.addListener("click", function () {
+          accidentInfo.open(map, accidentMarker);
+        });
 
-            // Hospital marker (blue)
-            var hospitalMarker = new google.maps.Marker({
-                position: { lat: 13.05127, lng: 80.23409 },
-                map: map,
-                title: 'WCF Hospital T Nagar',
-                label: { text: 'H', color: 'white' }
-            });
-            var hospitalInfo = new google.maps.InfoWindow({
-                content: '<div style="padding:10px;"><b>HOSPITAL</b><br>WCF Hospital T Nagar<br>Rating: 2.5/5</div>'
-            });
-            hospitalMarker.addListener('click', function() { hospitalInfo.open(map, hospitalMarker); });
+        // Hospital marker (blue)
+        var hospitalMarker = new google.maps.Marker({
+          position: { lat: 13.05127, lng: 80.23409 },
+          map: map,
+          title: "WCF Hospital T Nagar",
+          label: { text: "H", color: "white" },
+        });
+        var hospitalInfo = new google.maps.InfoWindow({
+          content: '<div style="padding:10px;"><b>HOSPITAL</b><br>WCF Hospital T Nagar<br>Rating: 2.5/5</div>',
+        });
+        hospitalMarker.addListener("click", function () {
+          hospitalInfo.open(map, hospitalMarker);
+        });
 
-            // Route polyline
-            var pathCoords = [
-    { lat: 13.05127, lng: 80.23409 },
-    { lat: 13.074, lng: 80.24 }
-];
+        // Route polyline
+        var pathCoords = [
+          { lat: 13.05127, lng: 80.23409 },
+          { lat: 13.074, lng: 80.24 },
+        ];
 
-            var routeLine = new google.maps.Polyline({
-                path: pathCoords,
-                geodesic: true,
-                strokeColor: '#2196f3',
-                strokeOpacity: 0.9,
-                strokeWeight: 5
-            });
-            routeLine.setMap(map);
-        
+        var routeLine = new google.maps.Polyline({
+          path: pathCoords,
+          geodesic: true,
+          strokeColor: "#2196f3",
+          strokeOpacity: 0.9,
+          strokeWeight: 5,
+        });
+        routeLine.setMap(map);
 
-            // Fit bounds to show all
-            var bounds = new google.maps.LatLngBounds();
-            bounds.extend({ lat: 13.074, lng: 80.24 });
-            bounds.extend({ lat: 13.05127, lng: 80.23409 });
-            map.fitBounds(bounds, 50);
-        }
+        // Fit bounds to show all
+        var bounds = new google.maps.LatLngBounds();
+        bounds.extend({ lat: 13.074, lng: 80.24 });
+        bounds.extend({ lat: 13.05127, lng: 80.23409 });
+        map.fitBounds(bounds, 50);
+      }
     </script>
-    <script async defer
-        src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap">
-    </script>
-</body>
+    <script
+      async
+      defer
+      src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap"
+    ></script>
+  </body>
 </html>

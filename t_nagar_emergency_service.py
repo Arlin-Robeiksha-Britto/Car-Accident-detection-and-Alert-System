@@ -3,13 +3,14 @@ T. Nagar 24x7 Emergency Services
 - Loads T. Nagar hospitals (24x7 general care) and police datasets
 - Assigns best-performing hospital by: emergency capability, proximity, response time,
   ICU availability, and past performance ratings
-- Provides phone list for automated emergency call to hospital + police
+- Provides phone list for automated emergency call to hospital + police.
 """
 
-import os
-import pandas as pd
-from typing import List, Dict, Optional, Tuple
+from __future__ import annotations
+
 from pathlib import Path
+
+import pandas as pd
 
 ROOT = Path(__file__).resolve().parent
 T_NAGAR_HOSPITALS = ROOT / "t_nagar_24x7_general_hospitals.csv"
@@ -37,7 +38,17 @@ def load_t_nagar_combined() -> pd.DataFrame:
     police["Address"] = ""
     police["ICU_availability"] = ""
     police["Response_readiness"] = "high"
-    cols = ["Category", "Name", "Address", "Latitude", "Longitude", "Phone", "Emergency_24x7", "ICU_availability", "Response_readiness"]
+    cols = [
+        "Category",
+        "Name",
+        "Address",
+        "Latitude",
+        "Longitude",
+        "Phone",
+        "Emergency_24x7",
+        "ICU_availability",
+        "Response_readiness",
+    ]
     for c in cols:
         if c not in hospitals.columns:
             hospitals[c] = ""
@@ -49,10 +60,11 @@ def load_t_nagar_combined() -> pd.DataFrame:
 
 def haversine_km(lat1: float, lon1: float, lat2: float, lon2: float) -> float:
     import math
+
     R = 6371
     dlat = math.radians(lat2 - lat1)
     dlon = math.radians(lon2 - lon1)
-    a = math.sin(dlat/2)**2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon/2)**2
+    a = math.sin(dlat / 2) ** 2 + math.cos(math.radians(lat1)) * math.cos(math.radians(lat2)) * math.sin(dlon / 2) ** 2
     c = 2 * math.atan2(math.sqrt(a), math.sqrt(1 - a))
     return R * c
 
@@ -61,20 +73,19 @@ def get_24x7_hospitals_and_police(
     accident_lat: float,
     accident_lon: float,
     max_radius_km: float = 15.0,
-) -> Tuple[List[Dict], List[Dict]]:
-    """
-    Get 24x7 hospitals and police stations near accident location.
-    Returns (list of hospital dicts, list of police dicts) sorted by distance.
+) -> tuple[list[dict], list[dict]]:
+    """Get 24x7 hospitals and police stations near accident location. Returns (list of hospital dicts, list of police
+    dicts) sorted by distance.
     """
     df = load_t_nagar_combined()
     df = df[df.get("Emergency_24x7", "Y").astype(str).str.upper() == "Y"]
     df["Distance_km"] = df.apply(
-        lambda r: haversine_km(accident_lat, accident_lon, float(r["Latitude"]), float(r["Longitude"])),
-        axis=1
+        lambda r: haversine_km(accident_lat, accident_lon, float(r["Latitude"]), float(r["Longitude"])), axis=1
     )
     df = df[df["Distance_km"] <= max_radius_km].sort_values("Distance_km")
     hospitals = df[df["Category"].str.contains("Hospital", case=False, na=False)]
     police = df[df["Category"].str.contains("Police", case=False, na=False)]
+
     def to_dict(r):
         return {
             "name": r.get("Name", ""),
@@ -87,6 +98,7 @@ def get_24x7_hospitals_and_police(
             "icu_availability": str(r.get("ICU_availability", "")).upper() == "Y",
             "response_readiness": r.get("Response_readiness", "medium"),
         }
+
     return [to_dict(r) for _, r in hospitals.iterrows()], [to_dict(r) for _, r in police.iterrows()]
 
 
@@ -95,11 +107,9 @@ def assign_best_hospital(
     accident_lon: float,
     rating_system=None,
     max_radius_km: float = 15.0,
-) -> Optional[Dict]:
-    """
-    Assign best-performing hospital based on:
-    emergency capability (24x7), proximity, response time (est. from distance),
-    ICU availability, and past performance ratings.
+) -> dict | None:
+    """Assign best-performing hospital based on: emergency capability (24x7), proximity, response time (est. from
+    distance), ICU availability, and past performance ratings.
     """
     hospitals, _ = get_24x7_hospitals_and_police(accident_lat, accident_lon, max_radius_km)
     if not hospitals:
@@ -138,11 +148,9 @@ def get_emergency_call_list(
     include_nearest_police: bool = True,
     max_police: int = 2,
     rating_system=None,
-) -> List[Dict]:
-    """
-    Get ordered list of contacts for automated emergency call:
-    24x7 general care hospitals and emergency services (police).
-    Returns list of {"name", "phone", "category"} with valid phone numbers.
+) -> list[dict]:
+    """Get ordered list of contacts for automated emergency call: 24x7 general care hospitals and emergency services
+    (police). Returns list of {"name", "phone", "category"} with valid phone numbers.
     """
     hospitals, police = get_24x7_hospitals_and_police(accident_lat, accident_lon)
     out = []

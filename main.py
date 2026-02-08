@@ -1,7 +1,8 @@
-import cv2
 import os
+
+import cv2
+from alert_system import show_gui_alert, sound_alert
 from ultralytics import YOLO
-from alert_system import sound_alert, show_gui_alert
 
 # Load model
 model = YOLO(r"runs/detect/train4/weights/best.pt")
@@ -28,10 +29,10 @@ while True:
         if class_name.lower() == "accident" and not alert_triggered:
             alert_triggered = True
             print("🚨 Accident detected in video!")
-            
+
             # Save frame
             os.makedirs("accident_photos", exist_ok=True)
-            img_path = f"accident_photos/accident_frame.jpg"
+            img_path = "accident_photos/accident_frame.jpg"
             cv2.imwrite(img_path, frame)
 
             # Trigger alerts
@@ -41,7 +42,7 @@ while True:
     frame_count += 1
     cv2.imshow("Detection", frame)
 
-    if cv2.waitKey(1) == ord('q'):
+    if cv2.waitKey(1) == ord("q"):
         break
 
 cap.release()
