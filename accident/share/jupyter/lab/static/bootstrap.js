@@ -25,25 +25,25 @@ function getOption(name) {
   if (_CONFIG_DATA === null) {
     let configData = {};
     // Use script tag if available.
-    if (typeof document !== 'undefined' && document) {
-      const el = document.getElementById('jupyter-config-data');
+    if (typeof document !== "undefined" && document) {
+      const el = document.getElementById("jupyter-config-data");
 
       if (el) {
-        configData = JSON.parse(el.textContent || '{}');
+        configData = JSON.parse(el.textContent || "{}");
       }
     }
     _CONFIG_DATA = configData;
   }
 
-  return _CONFIG_DATA[name] || '';
+  return _CONFIG_DATA[name] || "";
 }
 
 // eslint-disable-next-line no-undef
-__webpack_public_path__ = getOption('fullStaticUrl') + '/';
+__webpack_public_path__ = getOption("fullStaticUrl") + "/";
 
 function loadScript(url) {
   return new Promise((resolve, reject) => {
-    const newScript = document.createElement('script');
+    const newScript = document.createElement("script");
     newScript.onerror = reject;
     newScript.onload = resolve;
     newScript.async = true;
@@ -57,7 +57,7 @@ async function loadComponent(url, scope) {
 
   // From https://webpack.js.org/concepts/module-federation/#dynamic-remote-containers
   // eslint-disable-next-line no-undef
-  await __webpack_init_sharing__('default');
+  await __webpack_init_sharing__("default");
   const container = window._JUPYTERLAB[scope];
   // Initialize the container, it may provide shared modules and may need ours
   // eslint-disable-next-line no-undef
@@ -67,25 +67,22 @@ async function loadComponent(url, scope) {
 void (async function bootstrap() {
   // This is all the data needed to load and activate plugins. This should be
   // gathered by the server and put onto the initial page template.
-  const extension_data = getOption('federated_extensions');
+  const extension_data = getOption("federated_extensions");
 
   // We first load all federated components so that the shared module
   // deduplication can run and figure out which shared modules from all
   // components should be actually used. We have to do this before importing
   // and using the module that actually uses these components so that all
   // dependencies are initialized.
-  let labExtensionUrl = getOption('fullLabextensionsUrl');
+  let labExtensionUrl = getOption("fullLabextensionsUrl");
   const extensions = await Promise.allSettled(
-    extension_data.map(async data => {
-      await loadComponent(
-        `${labExtensionUrl}/${data.name}/${data.load}`,
-        data.name
-      );
-    })
+    extension_data.map(async (data) => {
+      await loadComponent(`${labExtensionUrl}/${data.name}/${data.load}`, data.name);
+    }),
   );
 
-  extensions.forEach(p => {
-    if (p.status === 'rejected') {
+  extensions.forEach((p) => {
+    if (p.status === "rejected") {
       // There was an error loading the component
       console.error(p.reason);
     }
@@ -93,6 +90,6 @@ void (async function bootstrap() {
 
   // Now that all federated containers are initialized with the main
   // container, we can import the main function.
-  let main = (await import('./index.out.js')).main;
-  window.addEventListener('load', main);
+  let main = (await import("./index.out.js")).main;
+  window.addEventListener("load", main);
 })();

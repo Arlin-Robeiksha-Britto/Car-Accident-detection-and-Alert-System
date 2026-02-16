@@ -26,23 +26,23 @@ try:
         accident_lat=accident_lat,
         accident_lon=accident_lon,
         generate_map=True,
-        fast_mode=True  # ⚡ Fast mode - no slow downloads!
+        fast_mode=True,  # ⚡ Fast mode - no slow downloads!
     )
-    
+
     if response["success"]:
         print("✅ SUCCESS!\n")
         print(f"Hospital: {response['selected_hospital']['name']}")
         print(f"Rating: {response['selected_hospital']['star_rating']:.1f}/5.0 ⭐")
         print(f"Distance: {response['route']['distance_km']:.2f} km")
-        if response['route'].get('note'):
+        if response["route"].get("note"):
             print(f"Note: {response['route']['note']}")
         print(f"\nMap: {response['map_file']}")
         print("\n💡 Map shows straight-line route (for actual road routing, use fast_mode=False)")
     else:
         print(f"❌ Error: {response.get('error')}")
-        
+
 except Exception as e:
     print(f"❌ Error: {e}")
     import traceback
-    traceback.print_exc()
 
+    traceback.print_exc()
