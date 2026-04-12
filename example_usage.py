@@ -1,34 +1,35 @@
 """
 Example Usage of Emergency Response System
-Demonstrates how to use the new intelligent route finding and hospital rating system
+Demonstrates how to use the new intelligent route finding and hospital rating system.
 """
 
 from emergency_response_system import EmergencyResponseSystem
 
+
 def example_basic_usage():
-    """Basic example: Handle an accident and get route"""
+    """Basic example: Handle an accident and get route."""
     print("=" * 60)
     print("Example 1: Basic Accident Handling")
     print("=" * 60)
-    
+
     # Initialize the system
     emergency = EmergencyResponseSystem()
-    
+
     # Simulate accident at Chennai, India
     accident_lat = 13.074
     accident_lon = 80.24
-    
+
     # Handle accident - automatically finds best hospital and route
     # Use fast_mode=True for instant results, or fast_mode=False for accurate road routing
     response = emergency.handle_accident(
         accident_lat=accident_lat,
         accident_lon=accident_lon,
         generate_map=True,
-        fast_mode=True  # Set to False for accurate road routing (slower)
+        fast_mode=True,  # Set to False for accurate road routing (slower)
     )
-    
+
     if response["success"]:
-        print(f"\n✅ Accident handled successfully!")
+        print("\n✅ Accident handled successfully!")
         print(f"Accident ID: {response['accident_id']}")
         print(f"\nSelected Hospital: {response['selected_hospital']['name']}")
         print(f"Star Rating: {response['selected_hospital']['star_rating']:.1f}/5.0")
@@ -39,13 +40,14 @@ def example_basic_usage():
 
 
 def example_hospital_rating_update():
-    """Example: Update hospital ratings based on treatment outcomes"""
+    """Example: Update hospital ratings based on treatment outcomes.
+    """
     print("\n" + "=" * 60)
     print("Example 2: Recording Treatment Outcomes")
     print("=" * 60)
-    
+
     emergency = EmergencyResponseSystem()
-    
+
     # Record a successful treatment outcome
     emergency.record_treatment_outcome(
         accident_id="accident_20260108_093319",
@@ -53,25 +55,26 @@ def example_hospital_rating_update():
         patient_outcome="successful",  # 'successful', 'partial', or 'unsuccessful'
         quality_score=85.0,  # 0-100 scale
         response_time_minutes=12.5,
-        treatment_notes="Patient stabilized quickly, excellent emergency response"
+        treatment_notes="Patient stabilized quickly, excellent emergency response",
     )
-    
+
     print("✅ Treatment outcome recorded!")
     print("Hospital rating will be updated automatically based on performance.")
 
 
 def example_view_hospital_performance():
-    """Example: View hospital performance metrics"""
+    """Example: View hospital performance metrics.
+    """
     print("\n" + "=" * 60)
     print("Example 3: Hospital Performance Report")
     print("=" * 60)
-    
+
     emergency = EmergencyResponseSystem()
-    
+
     # Get performance for a specific hospital
     hospital_name = "HAPPY MOM-Pregnancy to Motherhood"
     performance = emergency.get_hospital_performance_report(hospital_name)
-    
+
     if performance:
         print(f"\nHospital: {performance['hospital_name']}")
         print(f"Current Rating: {performance['current_rating']:.1f}/5.0 stars")
@@ -84,16 +87,17 @@ def example_view_hospital_performance():
 
 
 def example_top_hospitals():
-    """Example: Get list of top-performing hospitals"""
+    """Example: Get list of top-performing hospitals.
+    """
     print("\n" + "=" * 60)
     print("Example 4: Top Performing Hospitals")
     print("=" * 60)
-    
+
     emergency = EmergencyResponseSystem()
-    
+
     # Get top 5 hospitals
     top_hospitals = emergency.get_top_performing_hospitals(limit=5)
-    
+
     if top_hospitals:
         print("\nTop Performing Hospitals:")
         for i, hospital in enumerate(top_hospitals, 1):
@@ -108,20 +112,20 @@ def example_top_hospitals():
 
 if __name__ == "__main__":
     print("\n🚨 Emergency Response System - Example Usage\n")
-    
+
     # Run examples
     try:
         example_basic_usage()
         example_hospital_rating_update()
         example_view_hospital_performance()
         example_top_hospitals()
-        
+
         print("\n" + "=" * 60)
         print("✅ All examples completed!")
         print("=" * 60)
-        
+
     except Exception as e:
         print(f"\n❌ Error running examples: {e}")
         import traceback
-        traceback.print_exc()
 
+        traceback.print_exc()
