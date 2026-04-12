@@ -1,17 +1,14 @@
 from ultralytics import YOLO
-import numpy as np
 
-class AccidentDetectionModel(object):
 
-    class_names = ['Accident', 'No Accident']  # You can customize this if your class indices differ
+class AccidentDetectionModel:
+    class_names = ["Accident", "No Accident"]  # You can customize this if your class indices differ
 
     def __init__(self, model_path):
         self.model = YOLO(model_path)
 
     def predict_accident(self, frame):
-        """
-        Takes an image (BGR NumPy array like from OpenCV) and predicts accident.
-        Returns: (label, confidence)
+        """Takes an image (BGR NumPy array like from OpenCV) and predicts accident. Returns: (label, confidence).
         """
         results = self.model(frame)
         boxes = results[0].boxes
