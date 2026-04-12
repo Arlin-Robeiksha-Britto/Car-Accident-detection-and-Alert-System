@@ -3,7 +3,7 @@ Post-stabilization star rating and performance score for the hospital.
 After the patient is stabilized and life is saved, generate rating based on:
 - Response speed (response_time_minutes)
 - Treatment outcome (successful / partial / unsuccessful)
-- Patient feedback (quality_score 0-100, treatment_notes)
+- Patient feedback (quality_score 0-100, treatment_notes).
 """
 
 import sys
@@ -22,9 +22,8 @@ def record_outcome_and_update_rating(
     response_time_minutes: float,
     treatment_notes: str = "",
 ):
-    """
-    Record treatment outcome and update hospital star rating and performance score.
-    Call this after patient is stabilized.
+    """Record treatment outcome and update hospital star rating and performance score. Call this after patient is
+    stabilized.
 
     Args:
         accident_id: Same ID as when accident was detected (e.g. accident_20260130_115150)
@@ -35,6 +34,7 @@ def record_outcome_and_update_rating(
         treatment_notes: Optional patient feedback text
     """
     from emergency_response_system import EmergencyResponseSystem
+
     system = EmergencyResponseSystem(use_t_nagar_24x7=True)
     ok = system.record_treatment_outcome(
         accident_id=accident_id,
@@ -64,8 +64,9 @@ if __name__ == "__main__":
         response_time_minutes = float(sys.argv[5])
         treatment_notes = sys.argv[6] if len(sys.argv) > 6 else ""
         record_outcome_and_update_rating(
-            accident_id, hospital_name, patient_outcome,
-            quality_score, response_time_minutes, treatment_notes
+            accident_id, hospital_name, patient_outcome, quality_score, response_time_minutes, treatment_notes
         )
     else:
-        print("Usage: python post_stabilization_rating.py <accident_id> <hospital_name> <successful|partial|unsuccessful> <quality_score 0-100> <response_time_minutes> [treatment_notes]")
+        print(
+            "Usage: python post_stabilization_rating.py <accident_id> <hospital_name> <successful|partial|unsuccessful> <quality_score 0-100> <response_time_minutes> [treatment_notes]"
+        )
