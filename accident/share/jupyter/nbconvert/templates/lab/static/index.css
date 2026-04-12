@@ -8,15 +8,14 @@
  */
 
 /* use standard opaque scrollbars for most nodes */
-[data-jp-theme-scrollbars='true'] {
-  scrollbar-color: rgb(var(--jp-scrollbar-thumb-color))
-    var(--jp-scrollbar-background-color);
+[data-jp-theme-scrollbars="true"] {
+  scrollbar-color: rgb(var(--jp-scrollbar-thumb-color)) var(--jp-scrollbar-background-color);
 }
 
 /* for code nodes, use a transparent style of scrollbar. These selectors
  * will match lower in the tree, and so will override the above */
-[data-jp-theme-scrollbars='true'] .CodeMirror-hscrollbar,
-[data-jp-theme-scrollbars='true'] .CodeMirror-vscrollbar {
+[data-jp-theme-scrollbars="true"] .CodeMirror-hscrollbar,
+[data-jp-theme-scrollbars="true"] .CodeMirror-vscrollbar {
   scrollbar-color: rgba(var(--jp-scrollbar-thumb-color), 0.5) transparent;
 }
 
@@ -54,14 +53,14 @@
  * Lumino
  */
 
-.lm-ScrollBar[data-orientation='horizontal'] {
+.lm-ScrollBar[data-orientation="horizontal"] {
   min-height: 16px;
   max-height: 16px;
   min-width: 45px;
   border-top: 1px solid #a0a0a0;
 }
 
-.lm-ScrollBar[data-orientation='vertical'] {
+.lm-ScrollBar[data-orientation="vertical"] {
   min-width: 16px;
   max-width: 16px;
   min-height: 45px;
@@ -101,40 +100,36 @@
   background: #a0a0a0;
 }
 
-.lm-ScrollBar[data-orientation='horizontal'] .lm-ScrollBar-thumb {
+.lm-ScrollBar[data-orientation="horizontal"] .lm-ScrollBar-thumb {
   height: 100%;
   min-width: 15px;
   border-left: 1px solid #a0a0a0;
   border-right: 1px solid #a0a0a0;
 }
 
-.lm-ScrollBar[data-orientation='vertical'] .lm-ScrollBar-thumb {
+.lm-ScrollBar[data-orientation="vertical"] .lm-ScrollBar-thumb {
   width: 100%;
   min-height: 15px;
   border-top: 1px solid #a0a0a0;
   border-bottom: 1px solid #a0a0a0;
 }
 
-.lm-ScrollBar[data-orientation='horizontal']
-  .lm-ScrollBar-button[data-action='decrement'] {
+.lm-ScrollBar[data-orientation="horizontal"] .lm-ScrollBar-button[data-action="decrement"] {
   background-image: var(--jp-icon-caret-left);
   background-size: 17px;
 }
 
-.lm-ScrollBar[data-orientation='horizontal']
-  .lm-ScrollBar-button[data-action='increment'] {
+.lm-ScrollBar[data-orientation="horizontal"] .lm-ScrollBar-button[data-action="increment"] {
   background-image: var(--jp-icon-caret-right);
   background-size: 17px;
 }
 
-.lm-ScrollBar[data-orientation='vertical']
-  .lm-ScrollBar-button[data-action='decrement'] {
+.lm-ScrollBar[data-orientation="vertical"] .lm-ScrollBar-button[data-action="decrement"] {
   background-image: var(--jp-icon-caret-up);
   background-size: 17px;
 }
 
-.lm-ScrollBar[data-orientation='vertical']
-  .lm-ScrollBar-button[data-action='increment'] {
+.lm-ScrollBar[data-orientation="vertical"] .lm-ScrollBar-button[data-action="increment"] {
   background-image: var(--jp-icon-caret-down);
   background-size: 17px;
 }
@@ -168,7 +163,7 @@
  * Distributed under the terms of the Modified BSD License.
  */
 
-.lm-AccordionPanel[data-orientation='horizontal'] > .lm-AccordionPanel-title {
+.lm-AccordionPanel[data-orientation="horizontal"] > .lm-AccordionPanel-title {
   /* Title is rotated for horizontal accordion panel using CSS */
   display: block;
   transform-origin: top left;
@@ -257,7 +252,7 @@
   cursor: pointer;
 }
 .lm-close-icon:after {
-  content: 'X';
+  content: "X";
   display: block;
   width: 15px;
   height: 15px;
@@ -308,24 +303,24 @@
   left: 0;
   width: 100%;
   height: 100%;
-  content: '';
+  content: "";
 }
 
-.lm-DockPanel-handle[data-orientation='horizontal'] {
+.lm-DockPanel-handle[data-orientation="horizontal"] {
   cursor: ew-resize;
 }
 
-.lm-DockPanel-handle[data-orientation='vertical'] {
+.lm-DockPanel-handle[data-orientation="vertical"] {
   cursor: ns-resize;
 }
 
-.lm-DockPanel-handle[data-orientation='horizontal']:after {
+.lm-DockPanel-handle[data-orientation="horizontal"]:after {
   left: 50%;
   min-width: 8px;
   transform: translateX(-50%);
 }
 
-.lm-DockPanel-handle[data-orientation='vertical']:after {
+.lm-DockPanel-handle[data-orientation="vertical"]:after {
   top: 50%;
   min-height: 8px;
   transform: translateY(-50%);
@@ -461,11 +456,11 @@
   user-select: none;
 }
 
-.lm-ScrollBar[data-orientation='horizontal'] {
+.lm-ScrollBar[data-orientation="horizontal"] {
   flex-direction: row;
 }
 
-.lm-ScrollBar[data-orientation='vertical'] {
+.lm-ScrollBar[data-orientation="vertical"] {
   flex-direction: column;
 }
 
@@ -518,24 +513,24 @@
   left: 0;
   width: 100%;
   height: 100%;
-  content: '';
+  content: "";
 }
 
-.lm-SplitPanel[data-orientation='horizontal'] > .lm-SplitPanel-handle {
+.lm-SplitPanel[data-orientation="horizontal"] > .lm-SplitPanel-handle {
   cursor: ew-resize;
 }
 
-.lm-SplitPanel[data-orientation='vertical'] > .lm-SplitPanel-handle {
+.lm-SplitPanel[data-orientation="vertical"] > .lm-SplitPanel-handle {
   cursor: ns-resize;
 }
 
-.lm-SplitPanel[data-orientation='horizontal'] > .lm-SplitPanel-handle:after {
+.lm-SplitPanel[data-orientation="horizontal"] > .lm-SplitPanel-handle:after {
   left: 50%;
   min-width: 8px;
   transform: translateX(-50%);
 }
 
-.lm-SplitPanel[data-orientation='vertical'] > .lm-SplitPanel-handle:after {
+.lm-SplitPanel[data-orientation="vertical"] > .lm-SplitPanel-handle:after {
   top: 50%;
   min-height: 8px;
   transform: translateY(-50%);
@@ -563,12 +558,12 @@
   user-select: none;
 }
 
-.lm-TabBar[data-orientation='horizontal'] {
+.lm-TabBar[data-orientation="horizontal"] {
   flex-direction: row;
   align-items: flex-end;
 }
 
-.lm-TabBar[data-orientation='vertical'] {
+.lm-TabBar[data-orientation="vertical"] {
   flex-direction: column;
   align-items: flex-end;
 }
@@ -581,11 +576,11 @@
   list-style-type: none;
 }
 
-.lm-TabBar[data-orientation='horizontal'] > .lm-TabBar-content {
+.lm-TabBar[data-orientation="horizontal"] > .lm-TabBar-content {
   flex-direction: row;
 }
 
-.lm-TabBar[data-orientation='vertical'] > .lm-TabBar-content {
+.lm-TabBar[data-orientation="vertical"] > .lm-TabBar-content {
   flex-direction: column;
 }
 
@@ -626,12 +621,12 @@
   position: relative;
 }
 
-.lm-TabBar.lm-mod-dragging[data-orientation='horizontal'] .lm-TabBar-tab {
+.lm-TabBar.lm-mod-dragging[data-orientation="horizontal"] .lm-TabBar-tab {
   left: 0;
   transition: left 150ms ease;
 }
 
-.lm-TabBar.lm-mod-dragging[data-orientation='vertical'] .lm-TabBar-tab {
+.lm-TabBar.lm-mod-dragging[data-orientation="vertical"] .lm-TabBar-tab {
   top: 0;
   transition: top 150ms ease;
 }
@@ -1313,7 +1308,7 @@
   flex: unset;
 }
 
-.lm-DockPanel-tabBar[data-orientation='horizontal'] {
+.lm-DockPanel-tabBar[data-orientation="horizontal"] {
   flex: 1 1 auto;
 }
 
@@ -1553,10 +1548,7 @@
 }
 
 .jp-terminal-icon-background-color[fill] {
-  fill: var(
-    --jp-terminal-icon-background-color,
-    var(--jp-inverse-layout-color2)
-  );
+  fill: var(--jp-terminal-icon-background-color, var(--jp-inverse-layout-color2));
 }
 
 .jp-text-editor-icon-color[fill] {
@@ -1932,7 +1924,7 @@ body.lm-mod-override-cursor .jp-IFrame {
 }
 
 body.lm-mod-override-cursor .jp-IFrame::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -1979,7 +1971,7 @@ body.lm-mod-override-cursor .jp-IFrame::before {
   height: inherit;
 }
 
-.jp-FormGroup-content fieldset input[type='checkbox'] {
+.jp-FormGroup-content fieldset input[type="checkbox"] {
   position: relative;
   top: 2px;
   margin-left: 0;
@@ -2153,9 +2145,7 @@ button.jp-ArrayOperationsButton.jp-mod-styled:disabled {
   padding: 0.5em 0.2em 0.5em 0;
 }
 
-.jp-FormGroup-contentCompact
-  .jp-FormGroup-compactTitle
-  .jp-FormGroup-description {
+.jp-FormGroup-contentCompact .jp-FormGroup-compactTitle .jp-FormGroup-description {
   font-size: var(--jp-ui-font-size1);
   color: var(--jp-ui-font-color2);
 }
@@ -2173,10 +2163,7 @@ button.jp-ArrayOperationsButton.jp-mod-styled:disabled {
   padding-bottom: 7px;
 }
 
-.jp-FormGroup-contentCompact
-  .jp-objectFieldWrapper
-  .jp-objectFieldWrapper
-  .form-group {
+.jp-FormGroup-contentCompact .jp-objectFieldWrapper .jp-objectFieldWrapper .form-group {
   padding: 2px 8px 2px var(--jp-private-settingeditor-modifier-indent);
   margin-top: 2px;
 }
@@ -2252,7 +2239,7 @@ button.jp-ArrayOperationsButton.jp-mod-styled:disabled {
   text-transform: uppercase;
 }
 
-.lm-AccordionPanel[data-orientation='horizontal'] > .jp-AccordionPanel-title {
+.lm-AccordionPanel[data-orientation="horizontal"] > .jp-AccordionPanel-title {
   /* Title is rotated for horizontal accordion panel using CSS */
   display: block;
   transform-origin: top left;
@@ -2321,13 +2308,11 @@ button.jp-ArrayOperationsButton.jp-mod-styled:disabled {
   height: 3em;
   border-radius: 50%;
   background: var(--jp-brand-color3);
-  background: linear-gradient(
-    to right,
-    #f37626 10%,
-    rgba(255, 255, 255, 0) 42%
-  );
+  background: linear-gradient(to right, #f37626 10%, rgba(255, 255, 255, 0) 42%);
   position: relative;
-  animation: load3 1s infinite linear, fadeIn 1s;
+  animation:
+    load3 1s infinite linear,
+    fadeIn 1s;
 }
 
 .jp-SpinnerContent::before {
@@ -2338,7 +2323,7 @@ button.jp-ArrayOperationsButton.jp-mod-styled:disabled {
   position: absolute;
   top: 0;
   left: 0;
-  content: '';
+  content: "";
 }
 
 .jp-SpinnerContent::after {
@@ -2346,7 +2331,7 @@ button.jp-ArrayOperationsButton.jp-mod-styled:disabled {
   width: 75%;
   height: 75%;
   border-radius: 50%;
-  content: '';
+  content: "";
   margin: auto;
   position: absolute;
   top: 0;
@@ -2412,7 +2397,7 @@ input.jp-mod-styled {
   -moz-appearance: none;
 }
 
-input[type='checkbox'].jp-mod-styled {
+input[type="checkbox"].jp-mod-styled {
   appearance: checkbox;
   -webkit-appearance: checkbox;
   -moz-appearance: checkbox;
@@ -2513,7 +2498,7 @@ select.jp-mod-styled[multiple] {
 }
 
 .jp-switch-track::before {
-  content: '';
+  content: "";
   position: absolute;
   height: 10px;
   width: 10px;
@@ -2525,11 +2510,11 @@ select.jp-mod-styled[multiple] {
   border-radius: 50%;
 }
 
-.jp-switch[aria-checked='true'] .jp-switch-track {
+.jp-switch[aria-checked="true"] .jp-switch-track {
   background-color: var(--jp-switch-true-position-color, var(--jp-warn-color0));
 }
 
-.jp-switch[aria-checked='true'] .jp-switch-track::before {
+.jp-switch[aria-checked="true"] .jp-switch-track::before {
   /* track width (35) - margins (3 + 3) - thumb width (10) */
   left: 19px;
 }
@@ -2541,9 +2526,7 @@ select.jp-mod-styled[multiple] {
 |----------------------------------------------------------------------------*/
 
 :root {
-  --jp-private-toolbar-height: calc(
-    28px + var(--jp-border-width)
-  ); /* leave 28px for content */
+  --jp-private-toolbar-height: calc(28px + var(--jp-border-width)); /* leave 28px for content */
 }
 
 .jp-Toolbar {
@@ -2637,16 +2620,12 @@ button.jp-ToolbarButtonComponent .jp-ToolbarButtonComponent-label {
   font-family: var(--jp-ui-font-family);
 }
 
-#jp-main-dock-panel[data-mode='single-document']
-  .jp-MainAreaWidget
-  > .jp-Toolbar.jp-Toolbar-micro {
+#jp-main-dock-panel[data-mode="single-document"] .jp-MainAreaWidget > .jp-Toolbar.jp-Toolbar-micro {
   padding: 0;
   min-height: 0;
 }
 
-#jp-main-dock-panel[data-mode='single-document']
-  .jp-MainAreaWidget
-  > .jp-Toolbar {
+#jp-main-dock-panel[data-mode="single-document"] .jp-MainAreaWidget > .jp-Toolbar {
   border: none;
   box-shadow: none;
 }
@@ -2779,8 +2758,8 @@ a:hover {
 }
 
 .jp-InputGroup input:focus {
-  box-shadow: inset 0 0 0 var(--jp-border-width)
-      var(--jp-input-active-box-shadow-color),
+  box-shadow:
+    inset 0 0 0 var(--jp-border-width) var(--jp-input-active-box-shadow-color),
     inset 0 0 0 3px var(--jp-input-active-box-shadow-color);
 }
 
@@ -2910,7 +2889,7 @@ select {
 }
 
 .jp-StatusBar-HoverItem {
-  box-shadow: '0px 4px 4px rgba(0, 0, 0, 0.25)';
+  box-shadow: "0px 4px 4px rgba(0, 0, 0, 0.25)";
 }
 
 .jp-StatusBar-TextItem {
@@ -3049,9 +3028,7 @@ select {
   margin-right: 4px;
 }
 
-.jp-ModalCommandPalette
-  .lm-CommandPalette
-  .lm-CommandPalette-item.lm-mod-disabled {
+.jp-ModalCommandPalette .lm-CommandPalette .lm-CommandPalette-item.lm-mod-disabled {
   display: none;
 }
 
@@ -3074,7 +3051,8 @@ select {
 }
 
 .lm-CommandPalette.lm-mod-focused .lm-CommandPalette-wrapper {
-  box-shadow: inset 0 0 0 1px var(--jp-input-active-box-shadow-color),
+  box-shadow:
+    inset 0 0 0 1px var(--jp-input-active-box-shadow-color),
     inset 0 0 0 3px var(--jp-input-active-box-shadow-color);
 }
 
@@ -3218,7 +3196,7 @@ select {
 }
 
 .lm-CommandPalette-content:empty::after {
-  content: 'No results';
+  content: "No results";
   margin: auto;
   margin-top: 20px;
   width: 100px;
@@ -3716,9 +3694,7 @@ button.jp-Dialog-close-button {
 
 :root {
   /* This is the padding value to fill the gaps between lines containing spans with background color. */
-  --jp-private-code-span-padding: calc(
-    (var(--jp-code-line-height) - 1) * var(--jp-code-font-size) / 2
-  );
+  --jp-private-code-span-padding: calc((var(--jp-code-line-height) - 1) * var(--jp-code-font-size) / 2);
 }
 
 .jp-RenderedText {
@@ -3915,7 +3891,7 @@ button.jp-Dialog-close-button {
   text-decoration: underline;
 }
 
-.jp-RenderedText[data-mime-type='application/vnd.jupyter.stderr'] {
+.jp-RenderedText[data-mime-type="application/vnd.jupyter.stderr"] {
   background: var(--jp-rendermime-error-background);
   padding-top: var(--jp-code-padding);
 }
@@ -3988,8 +3964,7 @@ button.jp-Dialog-close-button {
   line-height: var(--jp-content-heading-line-height);
   font-weight: var(--jp-content-heading-font-weight);
   font-style: normal;
-  margin: var(--jp-content-heading-margin-top) 0
-    var(--jp-content-heading-margin-bottom) 0;
+  margin: var(--jp-content-heading-margin-top) 0 var(--jp-content-heading-margin-bottom) 0;
 }
 
 .jp-RenderedHTMLCommon h1:first-child,
@@ -4193,11 +4168,11 @@ button.jp-Dialog-close-button {
 }
 
 /* Change color behind transparent images if they need it... */
-[data-jp-theme-light='false'] .jp-RenderedImage img.jp-needs-light-background {
+[data-jp-theme-light="false"] .jp-RenderedImage img.jp-needs-light-background {
   background-color: var(--jp-inverse-layout-color1);
 }
 
-[data-jp-theme-light='true'] .jp-RenderedImage img.jp-needs-dark-background {
+[data-jp-theme-light="true"] .jp-RenderedImage img.jp-needs-dark-background {
   background-color: var(--jp-inverse-layout-color1);
 }
 
@@ -4582,8 +4557,7 @@ h6:hover .jp-InternalAnchorLink {
 
 .jp-DocumentSearch-toggle-wrapper:focus,
 .jp-DocumentSearch-button-wrapper:focus {
-  outline: var(--jp-border-width) solid
-    var(--jp-cell-editor-active-border-color);
+  outline: var(--jp-border-width) solid var(--jp-cell-editor-active-border-color);
   outline-offset: -1px;
 }
 
@@ -4757,7 +4731,7 @@ h6:hover .jp-InternalAnchorLink {
   padding: 0 var(--jp-code-padding);
 }
 
-.jp-CodeMirrorEditor[data-type='inline'] .cm-dialog {
+.jp-CodeMirrorEditor[data-type="inline"] .cm-dialog {
   background-color: var(--jp-layout-color0);
   color: var(--jp-content-font-color1);
 }
@@ -4768,17 +4742,15 @@ h6:hover .jp-InternalAnchorLink {
 
 /* When zoomed out 67% and 33% on a screen of 1440 width x 900 height */
 @media screen and (min-width: 2138px) and (max-width: 4319px) {
-  .jp-CodeMirrorEditor[data-type='inline'] .cm-cursor {
-    border-left: var(--jp-code-cursor-width1) solid
-      var(--jp-editor-cursor-color);
+  .jp-CodeMirrorEditor[data-type="inline"] .cm-cursor {
+    border-left: var(--jp-code-cursor-width1) solid var(--jp-editor-cursor-color);
   }
 }
 
 /* When zoomed out less than 33% */
 @media screen and (min-width: 4320px) {
-  .jp-CodeMirrorEditor[data-type='inline'] .cm-cursor {
-    border-left: var(--jp-code-cursor-width2) solid
-      var(--jp-editor-cursor-color);
+  .jp-CodeMirrorEditor[data-type="inline"] .cm-cursor {
+    border-left: var(--jp-code-cursor-width2) solid var(--jp-editor-cursor-color);
   }
 }
 
@@ -5114,9 +5086,7 @@ h6:hover .jp-InternalAnchorLink {
   padding: 4px;
 }
 
-.jp-DirListing-header
-  .jp-DirListing-checkboxWrapper
-  + .jp-DirListing-headerItem {
+.jp-DirListing-header .jp-DirListing-checkboxWrapper + .jp-DirListing-headerItem {
   padding-left: 4px;
 }
 
@@ -5204,14 +5174,13 @@ h6:hover .jp-InternalAnchorLink {
 
 .jp-DirListing-item.jp-mod-running .jp-DirListing-itemIcon::before {
   color: var(--jp-success-color1);
-  content: '\25CF';
+  content: "\25CF";
   font-size: 8px;
   position: absolute;
   left: -8px;
 }
 
-.jp-DirListing-item.jp-mod-running.jp-mod-selected
-  .jp-DirListing-itemIcon::before {
+.jp-DirListing-item.jp-mod-running.jp-mod-selected .jp-DirListing-itemIcon::before {
   color: var(--jp-ui-inverse-font-color1);
 }
 
@@ -5340,7 +5309,7 @@ body.lm-mod-override-cursor .jp-OutputArea-output.jp-mod-isolated {
 }
 
 body.lm-mod-override-cursor .jp-OutputArea-output.jp-mod-isolated::before {
-  content: '';
+  content: "";
   position: absolute;
   top: 0;
   left: 0;
@@ -5627,7 +5596,7 @@ body.lm-mod-override-cursor .jp-OutputArea-output.jp-mod-isolated::before {
 /* Active heading indicator */
 
 .jp-tocItem-heading::before {
-  content: ' ';
+  content: " ";
   background: transparent;
   width: var(--jp-private-toc-active-width);
   height: 24px;
@@ -5920,12 +5889,12 @@ Note: input and output wrappers have "display: block" propery in print mode.
   resize: vertical;
 }
 
-.jp-CodeCell.jp-mod-outputsScrolled .jp-Cell-outputArea[style*='height'] {
+.jp-CodeCell.jp-mod-outputsScrolled .jp-Cell-outputArea[style*="height"] {
   max-height: unset;
 }
 
 .jp-CodeCell.jp-mod-outputsScrolled .jp-Cell-outputArea::after {
-  content: ' ';
+  content: " ";
   box-shadow: inset 0 0 6px 2px rgb(0 0 0 / 30%);
   width: 100%;
   height: 100%;
@@ -5943,9 +5912,7 @@ Note: input and output wrappers have "display: block" propery in print mode.
 }
 
 .jp-CodeCell.jp-mod-outputsScrolled .jp-OutputArea-prompt {
-  width: calc(
-    var(--jp-cell-prompt-width) - var(--jp-private-cell-scrolling-output-offset)
-  );
+  width: calc(var(--jp-cell-prompt-width) - var(--jp-private-cell-scrolling-output-offset));
 }
 
 .jp-CodeCell.jp-mod-outputsScrolled .jp-OutputArea-promptOverlay {
@@ -6005,32 +5972,32 @@ Note: input and output wrappers have "display: block" propery in print mode.
   Align collapseHeadingButton with cell top header
   The font sizes are identical to the ones in packages/rendermime/style/base.css
 */
-.jp-mod-rendered .jp-collapseHeadingButton[data-heading-level='1'] {
+.jp-mod-rendered .jp-collapseHeadingButton[data-heading-level="1"] {
   font-size: var(--jp-content-font-size5);
   background-position-y: calc(0.3 * var(--jp-content-font-size5));
 }
 
-.jp-mod-rendered .jp-collapseHeadingButton[data-heading-level='2'] {
+.jp-mod-rendered .jp-collapseHeadingButton[data-heading-level="2"] {
   font-size: var(--jp-content-font-size4);
   background-position-y: calc(0.3 * var(--jp-content-font-size4));
 }
 
-.jp-mod-rendered .jp-collapseHeadingButton[data-heading-level='3'] {
+.jp-mod-rendered .jp-collapseHeadingButton[data-heading-level="3"] {
   font-size: var(--jp-content-font-size3);
   background-position-y: calc(0.3 * var(--jp-content-font-size3));
 }
 
-.jp-mod-rendered .jp-collapseHeadingButton[data-heading-level='4'] {
+.jp-mod-rendered .jp-collapseHeadingButton[data-heading-level="4"] {
   font-size: var(--jp-content-font-size2);
   background-position-y: calc(0.3 * var(--jp-content-font-size2));
 }
 
-.jp-mod-rendered .jp-collapseHeadingButton[data-heading-level='5'] {
+.jp-mod-rendered .jp-collapseHeadingButton[data-heading-level="5"] {
   font-size: var(--jp-content-font-size1);
   background-position-y: top;
 }
 
-.jp-mod-rendered .jp-collapseHeadingButton[data-heading-level='6'] {
+.jp-mod-rendered .jp-collapseHeadingButton[data-heading-level="6"] {
   font-size: var(--jp-content-font-size0);
   background-position-y: top;
 }
@@ -6040,9 +6007,7 @@ Note: input and output wrappers have "display: block" propery in print mode.
   display: none;
 }
 
-.jp-Notebook.jp-mod-showHiddenCellsButton
-  :is(.jp-MarkdownCell:hover, .jp-mod-active)
-  .jp-collapseHeadingButton {
+.jp-Notebook.jp-mod-showHiddenCellsButton :is(.jp-MarkdownCell:hover, .jp-mod-active) .jp-collapseHeadingButton {
   display: flex;
 }
 
@@ -6225,7 +6190,7 @@ cell outputs.
  * Execution indicator
  */
 .jp-tocItem-content::after {
-  content: '';
+  content: "";
 
   /* Must be identical to form a circle */
   width: 12px;
@@ -6236,20 +6201,20 @@ cell outputs.
   right: 0;
 }
 
-.jp-tocItem-content[data-running='0']::after {
+.jp-tocItem-content[data-running="0"]::after {
   border-radius: 50%;
   border: var(--jp-border-width) solid var(--jp-inverse-layout-color3);
   background: none;
 }
 
-.jp-tocItem-content[data-running='1']::after {
+.jp-tocItem-content[data-running="1"]::after {
   border-radius: 50%;
   border: var(--jp-border-width) solid var(--jp-inverse-layout-color3);
   background-color: var(--jp-inverse-layout-color3);
 }
 
-.jp-tocItem-content[data-running='0'],
-.jp-tocItem-content[data-running='1'] {
+.jp-tocItem-content[data-running="0"],
+.jp-tocItem-content[data-running="1"] {
   margin-right: 12px;
 }
 
@@ -6260,16 +6225,10 @@ cell outputs.
 
 .jp-Notebook-footer {
   height: 27px;
-  margin-left: calc(
-    var(--jp-cell-prompt-width) + var(--jp-cell-collapser-width) +
-      var(--jp-cell-padding)
-  );
+  margin-left: calc(var(--jp-cell-prompt-width) + var(--jp-cell-collapser-width) + var(--jp-cell-padding));
   width: calc(
     100% -
-      (
-        var(--jp-cell-prompt-width) + var(--jp-cell-collapser-width) +
-          var(--jp-cell-padding) + var(--jp-cell-padding)
-      )
+      (var(--jp-cell-prompt-width) + var(--jp-cell-collapser-width) + var(--jp-cell-padding) + var(--jp-cell-padding))
   );
   border: var(--jp-border-width) solid var(--jp-cell-editor-border-color);
   color: var(--jp-ui-font-color3);
@@ -6341,7 +6300,7 @@ cell outputs.
 
 .jp-Notebook.jp-mod-scrollPastEnd::after {
   display: block;
-  content: '';
+  content: "";
   min-height: var(--jp-notebook-scroll-padding);
 }
 
@@ -6397,7 +6356,7 @@ cell outputs.
 
 .jp-Notebook .jp-Cell.jp-mod-dirty .jp-InputPrompt::before {
   color: var(--jp-warn-color1);
-  content: '•';
+  content: "•";
 }
 
 .jp-Notebook .jp-Cell.jp-mod-active.jp-mod-dirty .jp-Collapser {
@@ -6423,8 +6382,7 @@ cell outputs.
   background: var(--jp-notebook-multiselected-color);
 }
 
-.jp-Notebook.jp-mod-commandMode
-  .jp-Cell.jp-mod-active.jp-mod-selected:not(.jp-mod-multiSelected) {
+.jp-Notebook.jp-mod-commandMode .jp-Cell.jp-mod-active.jp-mod-selected:not(.jp-mod-multiSelected) {
   background: transparent;
 }
 
@@ -6445,8 +6403,7 @@ cell outputs.
 }
 
 .jp-Notebook-cell.jp-mod-dropTarget,
-.jp-Notebook.jp-mod-commandMode
-  .jp-Notebook-cell.jp-mod-active.jp-mod-selected.jp-mod-dropTarget {
+.jp-Notebook.jp-mod-commandMode .jp-Notebook-cell.jp-mod-active.jp-mod-selected.jp-mod-dropTarget {
   border-top-color: var(--jp-private-notebook-selected-color);
   border-top-style: solid;
   border-top-width: 2px;
@@ -6608,22 +6565,16 @@ cell outputs.
 
 .jp-mod-sideBySide.jp-Notebook .jp-CodeCell {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) min-content minmax(
-      0,
-      var(--jp-side-by-side-output-size)
-    );
+  grid-template-columns: minmax(0, 1fr) min-content minmax(0, var(--jp-side-by-side-output-size));
   grid-template-rows: auto minmax(0, 1fr) auto;
   grid-template-areas:
-    'header header header'
-    'input handle output'
-    'footer footer footer';
+    "header header header"
+    "input handle output"
+    "footer footer footer";
 }
 
 .jp-mod-sideBySide.jp-Notebook .jp-CodeCell.jp-mod-resizedCell {
-  grid-template-columns: minmax(0, 1fr) min-content minmax(
-      0,
-      var(--jp-side-by-side-resized-cell)
-    );
+  grid-template-columns: minmax(0, 1fr) min-content minmax(0, var(--jp-side-by-side-resized-cell));
 }
 
 .jp-mod-sideBySide.jp-Notebook .jp-CodeCell .jp-CellHeader {
@@ -6654,16 +6605,14 @@ cell outputs.
 }
 
 .jp-mod-sideBySide.jp-Notebook .jp-CodeCell .jp-CellResizeHandle::after {
-  content: '';
+  content: "";
   display: block;
   background: var(--jp-border-color2);
   height: 100%;
   width: 5px;
 }
 
-.jp-mod-sideBySide.jp-Notebook
-  .jp-CodeCell.jp-mod-resizedCell
-  .jp-CellResizeHandle::after {
+.jp-mod-sideBySide.jp-Notebook .jp-CodeCell.jp-mod-resizedCell .jp-CellResizeHandle::after {
   background: var(--jp-border-color0);
 }
 
@@ -6700,13 +6649,7 @@ cell outputs.
 
 .jp-Cell-Placeholder-wrapper-body div {
   background: #f6f7f8;
-  background-image: -webkit-linear-gradient(
-    left,
-    #f6f7f8 0%,
-    #edeef1 20%,
-    #f6f7f8 40%,
-    #f6f7f8 100%
-  );
+  background-image: -webkit-linear-gradient(left, #f6f7f8 0%, #edeef1 20%, #f6f7f8 40%, #f6f7f8 100%);
   background-repeat: no-repeat;
   background-size: 800px 104px;
   height: 104px;
@@ -6749,4 +6692,3 @@ div.jp-Cell-Placeholder-content-2 {
 div.jp-Cell-Placeholder-content-3 {
   top: 140px;
 }
-

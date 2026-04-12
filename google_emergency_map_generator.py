@@ -5,15 +5,14 @@ Shows accident location, nearest hospital, and route between them.
 Uses same data interface as emergency_map_generator (no changes to other files).
 """
 
+from __future__ import annotations
+
 import os
-from typing import Dict, List, Optional
-from datetime import datetime
 
 
 class GoogleEmergencyMapGenerator:
-    """
-    Generates interactive HTML maps with Google Maps API.
-    Set GOOGLE_MAPS_API_KEY in environment or pass api_key to generate_map_html().
+    """Generates interactive HTML maps with Google Maps API. Set GOOGLE_MAPS_API_KEY in environment or pass api_key to
+    generate_map_html().
     """
 
     def __init__(self, places_dataset_path: str = "places_dataset.csv"):
@@ -23,18 +22,17 @@ class GoogleEmergencyMapGenerator:
         self,
         accident_lat: float,
         accident_lon: float,
-        hospital_name: str = None,
-        hospital_lat: float = None,
-        hospital_lon: float = None,
-        route_coordinates: List[Dict] = None,
+        hospital_name: str | None = None,
+        hospital_lat: float | None = None,
+        hospital_lon: float | None = None,
+        route_coordinates: list[dict] | None = None,
         route_distance_km: float = 0,
         star_rating: float = 2.5,
-        rating_info: Dict = None,
-        output_file: str = None,
-        api_key: str = None,
+        rating_info: dict | None = None,
+        output_file: str | None = None,
+        api_key: str | None = None,
     ) -> str:
-        """
-        Generate interactive HTML map using Google Maps.
+        """Generate interactive HTML map using Google Maps.
 
         Args:
             accident_lat, accident_lon: Accident location
@@ -221,25 +219,25 @@ class GoogleEmergencyMapGenerator:
         empty_stars = 5 - full_stars - half_star
         return "★" * full_stars + ("½" if half_star else "") + "☆" * empty_stars
 
-    def _format_hospital_metrics(self, rating_info: Dict) -> str:
+    def _format_hospital_metrics(self, rating_info: dict) -> str:
         if not rating_info:
             return ""
         return f"""
             <div class="metric-item">
                 <span class="metric-label">Total Cases:</span>
-                <span class="metric-value">{rating_info.get('total_cases', 0)}</span>
+                <span class="metric-value">{rating_info.get("total_cases", 0)}</span>
             </div>
             <div class="metric-item">
                 <span class="metric-label">Success Rate:</span>
-                <span class="metric-value">{rating_info.get('success_rate_percent', 0):.1f}%</span>
+                <span class="metric-value">{rating_info.get("success_rate_percent", 0):.1f}%</span>
             </div>
             <div class="metric-item">
                 <span class="metric-label">Avg Response Time:</span>
-                <span class="metric-value">{rating_info.get('average_response_time_minutes', 0):.1f} min</span>
+                <span class="metric-value">{rating_info.get("average_response_time_minutes", 0):.1f} min</span>
             </div>
         """
 
-    def _route_to_google_path_js(self, route_coordinates: List[Dict]) -> str:
+    def _route_to_google_path_js(self, route_coordinates: list[dict]) -> str:
         if not route_coordinates:
             return "// No route coordinates"
         path_js = "var pathCoords = [\n"
