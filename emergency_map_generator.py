@@ -4,44 +4,46 @@ Creates interactive maps showing:
 - Hospital location (starting point)
 - Accident location (destination)
 - Optimal route highlighted between them
-- Hospital star ratings displayed
+- Hospital star ratings displayed.
 """
 
-import json
-from typing import Dict, List, Optional
-from datetime import datetime
+from __future__ import annotations
+
 from emergency_route_finder import EmergencyRouteFinder
 from hospital_rating_system import HospitalRatingSystem
 
+
 class EmergencyMapGenerator:
-    """
-    Generates interactive HTML maps with route visualization
-    """
-    
+    """Generates interactive HTML maps with route visualization."""
+
     def __init__(self, places_dataset_path: str = "places_dataset.csv"):
         self.route_finder = EmergencyRouteFinder(places_dataset_path)
         self.rating_system = HospitalRatingSystem()
-    
-    def generate_map_html(self, accident_lat: float, accident_lon: float,
-                         hospital_name: str = None,
-                         hospital_lat: float = None,
-                         hospital_lon: float = None,
-                         output_file: str = None) -> str:
-        """
-        Generate interactive HTML map with route visualization
-        
+
+    def generate_map_html(
+        self,
+        accident_lat: float,
+        accident_lon: float,
+        hospital_name: str | None = None,
+        hospital_lat: float | None = None,
+        hospital_lon: float | None = None,
+        output_file: str | None = None,
+    ) -> str:
+        """Generate interactive HTML map with route visualization.
+
         Args:
             accident_lat, accident_lon: Accident location coordinates
             hospital_name: Name of hospital (will look up if coordinates not provided)
             hospital_lat, hospital_lon: Hospital coordinates (optional if name provided)
             output_file: Optional output file path
-            
+
         Returns:
             HTML content as string
         """
         # If hospital name provided, try to get coordinates from dataset
         if hospital_name and not hospital_lat:
             import pandas as pd
+
             try:
                 df = pd.read_csv(self.route_finder.dataset_path)
                 hospital_data = df[df["Name"].str.contains(hospital_name, case=False, na=False)]
@@ -51,7 +53,7 @@ class EmergencyMapGenerator:
                     hospital_name = hospital_data.iloc[0]["Name"]
             except Exception as e:
                 print(f"Error looking up hospital: {e}")
-        
+
         # If no hospital specified, find nearest
         if not hospital_lat or not hospital_lon:
             hospitals = self.route_finder.find_nearest_hospitals_with_routes(
@@ -63,37 +65,32 @@ class EmergencyMapGenerator:
                 hospital_name = hospitals[0]["hospital_name"]
             else:
                 return "<html><body>Error: Could not find hospital</body></html>"
-        
+
         # Get hospital rating
         rating_info = None
         if hospital_name:
             rating_info = self.rating_system.get_hospital_rating(hospital_name)
             if not rating_info:
                 # Register hospital if not in system
-                self.rating_system.register_hospital(
-                    hospital_name, 
-                    latitude=hospital_lat,
-                    longitude=hospital_lon
-                )
+                self.rating_system.register_hospital(hospital_name, latitude=hospital_lat, longitude=hospital_lon)
                 rating_info = self.rating_system.get_hospital_rating(hospital_name)
-        
+
         # Find optimal route
         route_info = self.route_finder.find_optimal_hospital_route(
-            accident_lat, accident_lon,
-            hospital_lat, hospital_lon
+            accident_lat, accident_lon, hospital_lat, hospital_lon
         )
-        
+
         if not route_info.get("success"):
             route_coordinates = []
             route_distance_km = 0
         else:
             route_coordinates = route_info["path_coordinates"]
             route_distance_km = route_info["distance_km"]
-        
+
         # Get star rating
         star_rating = rating_info["current_rating"] if rating_info else 2.5
         stars_html = self._generate_star_html(star_rating)
-        
+
         # Generate HTML
         html_content = f"""<!DOCTYPE html>
 <html>
@@ -214,11 +211,11 @@ class EmergencyMapGenerator:
         <h3>🚨 Emergency Response Information</h3>
         
         <div class="hospital-info">
-            <div class="hospital-name">🏥 {hospital_name or 'Nearest Hospital'}</div>
+            <div class="hospital-name">🏥 {hospital_name or "Nearest Hospital"}</div>
             <div class="star-rating">
                 Rating: {stars_html} ({star_rating:.1f}/5.0)
             </div>
-            {self._format_hospital_metrics(rating_info) if rating_info else ''}
+            {self._format_hospital_metrics(rating_info) if rating_info else ""}
         </div>
         
         <div class="route-info">
@@ -229,7 +226,7 @@ class EmergencyMapGenerator:
             </div>
             <div class="metric-item">
                 <span class="metric-label">Status:</span>
-                <span class="metric-value">{'✅ Route Found' if route_info.get('success') else '❌ No Route'}</span>
+                <span class="metric-value">{"✅ Route Found" if route_info.get("success") else "❌ No Route"}</span>
             </div>
         </div>
         
@@ -315,7 +312,7 @@ class EmergencyMapGenerator:
                       '<span style="font-size: 12px;">Emergency services dispatched</span></div>');
         
         // Draw route if available
-        {self._generate_route_js(route_coordinates) if route_coordinates else '// No route available'}
+        {self._generate_route_js(route_coordinates) if route_coordinates else "// No route available"}
         
         // Fit bounds to show both markers and route
         var bounds = new L.LatLngBounds([
@@ -332,62 +329,62 @@ class EmergencyMapGenerator:
     </script>
 </body>
 </html>"""
-        
+
         # Save to file if specified
         if output_file:
-            with open(output_file, 'w', encoding='utf-8') as f:
+            with open(output_file, "w", encoding="utf-8") as f:
                 f.write(html_content)
-        
+
         return html_content
-    
+
     def _generate_star_html(self, rating: float) -> str:
-        """Generate HTML for star rating display"""
+        """Generate HTML for star rating display."""
         full_stars = int(rating)
         half_star = 1 if (rating - full_stars) >= 0.5 else 0
         empty_stars = 5 - full_stars - half_star
-        
+
         stars = "★" * full_stars
         stars += "½" * half_star
         stars += "☆" * empty_stars
-        
+
         return stars
-    
-    def _format_hospital_metrics(self, rating_info: Dict) -> str:
-        """Format hospital performance metrics as HTML"""
+
+    def _format_hospital_metrics(self, rating_info: dict) -> str:
+        """Format hospital performance metrics as HTML."""
         if not rating_info:
             return ""
-        
+
         metrics_html = f"""
             <div class="metric-item">
                 <span class="metric-label">Total Cases:</span>
-                <span class="metric-value">{rating_info.get('total_cases', 0)}</span>
+                <span class="metric-value">{rating_info.get("total_cases", 0)}</span>
             </div>
             <div class="metric-item">
                 <span class="metric-label">Success Rate:</span>
-                <span class="metric-value">{rating_info.get('success_rate_percent', 0):.1f}%</span>
+                <span class="metric-value">{rating_info.get("success_rate_percent", 0):.1f}%</span>
             </div>
             <div class="metric-item">
                 <span class="metric-label">Avg Response Time:</span>
-                <span class="metric-value">{rating_info.get('average_response_time_minutes', 0):.1f} min</span>
+                <span class="metric-value">{rating_info.get("average_response_time_minutes", 0):.1f} min</span>
             </div>
             <div class="metric-item">
                 <span class="metric-label">Quality Score:</span>
-                <span class="metric-value">{rating_info.get('average_quality_score', 0):.1f}/100</span>
+                <span class="metric-value">{rating_info.get("average_quality_score", 0):.1f}/100</span>
             </div>
         """
         return metrics_html
-    
-    def _generate_route_js(self, route_coordinates: List[Dict]) -> str:
-        """Generate JavaScript code to draw route on map"""
+
+    def _generate_route_js(self, route_coordinates: list[dict]) -> str:
+        """Generate JavaScript code to draw route on map."""
         if not route_coordinates:
             return ""
-        
+
         # Convert coordinates to JavaScript array
         coords_js = "var routeCoordinates = [\n"
         for coord in route_coordinates:
             coords_js += f"        [{coord['lat']}, {coord['lon']}],\n"
         coords_js = coords_js.rstrip(",\n") + "\n    ];"
-        
+
         route_drawing_js = f"""
         {coords_js}
         
@@ -426,6 +423,5 @@ class EmergencyMapGenerator:
             }}, 100);
         }});
         """
-        
-        return route_drawing_js
 
+        return route_drawing_js
