@@ -1,13 +1,12 @@
-import streamlit as st
 import tempfile
-from PIL import Image
-import torch
-from ultralytics import YOLO
+
 import cv2
-import numpy as np
+import streamlit as st
+from PIL import Image
+from ultralytics import YOLO
 
 # Load your custom YOLOv5s model
-model = YOLO('yolov5s.pt')  # or 'best.pt' if available
+model = YOLO("yolov5s.pt")  # or 'best.pt' if available
 
 st.title("🧠 Tuck Detection with YOLOv5s")
 st.write("Upload an image or video to detect `tuck_in` and `tuck_out` using your trained model.")
@@ -16,7 +15,7 @@ st.write("Upload an image or video to detect `tuck_in` and `tuck_out` using your
 file = st.file_uploader("Upload image or video", type=["jpg", "png", "mp4"])
 
 if file:
-    suffix = file.name.split('.')[-1]
+    suffix = file.name.split(".")[-1]
 
     if suffix in ["jpg", "png"]:
         image = Image.open(file).convert("RGB")

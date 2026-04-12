@@ -22,7 +22,7 @@
 ((( line | escape_latex | ansi2latex )))
 ((*- endblock traceback_line *))
 
-% Display stream ouput with coloring
+% Display stream output with coloring
 ((* block stream *))
     \begin{Verbatim}[commandchars=\\\{\}]
 ((( output.text | escape_latex | ansi2latex )))
