@@ -1,14 +1,15 @@
-import cv2
-from ultralytics import YOLO
-import numpy as np
-from alert_system import sound_alert, phone_alert, show_gui_alert
-import time
 import os
 import threading
+import time
+
+import cv2
+from alert_system import phone_alert, show_gui_alert, sound_alert
+from ultralytics import YOLO
 
 # Load YOLOv8 model
 model = YOLO(r"runs/detect/train4/weights/best.pt")
 alarm_triggered = False
+
 
 def save_frame(frame):
     if not os.path.exists("accident_photos"):
@@ -17,10 +18,12 @@ def save_frame(frame):
     cv2.imwrite(filename, frame)
     print(f"✅ Saved: {filename}")
 
+
 def alert_thread():
     show_gui_alert()
     sound_alert()
     phone_alert()
+
 
 def detect_accident(frame):
     global alarm_triggered
@@ -32,22 +35,22 @@ def detect_accident(frame):
             class_name = model.names[class_id]
             confidence = float(r.boxes.conf[0])
 
-            if class_name.lower() == 'accident' and not alarm_triggered:
+            if class_name.lower() == "accident" and not alarm_triggered:
                 save_frame(frame)
                 alarm_triggered = True
                 threading.Thread(target=alert_thread).start()
 
             # Draw label
-            cv2.putText(frame, f"{class_name} {confidence:.2f}", (10, 40),
-                        cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+            cv2.putText(frame, f"{class_name} {confidence:.2f}", (10, 40), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
     return frame
+
 
 def startapplication(input_path="test_videos/test1.mp4"):
     global alarm_triggered
     alarm_triggered = False
 
     ext = os.path.splitext(input_path)[1].lower()
-    
+
     if ext in [".jpg", ".png", ".jpeg", ".bmp"]:
         print("🖼️ Image detected.")
         frame = cv2.imread(input_path)
@@ -72,6 +75,7 @@ def startapplication(input_path="test_videos/test1.mp4"):
 
     else:
         print("❌ Unsupported file format.")
+
 
 # Example:
 # To use this, call: startapplication("yourfile.jpg") or startapplication("yourfile.mp4")
