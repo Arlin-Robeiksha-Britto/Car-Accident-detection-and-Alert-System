@@ -5,28 +5,26 @@ Reads from response dict or from saved emergency_response_*.json files.
 Does not modify any existing project files.
 """
 
-import os
+from __future__ import annotations
+
 import json
+import os
 from datetime import datetime
-from typing import Dict, Optional, Union
 
 
 class AccidentReportGenerator:
-    """
-    Generates printable HTML reports for accident response.
-    """
+    """Generates printable HTML reports for accident response."""
 
     def __init__(self, reports_dir: str = "api_data"):
         self.reports_dir = reports_dir
 
     def generate_report_html(
         self,
-        response_data: Union[Dict, str],
-        output_file: str = None,
+        response_data: dict | str,
+        output_file: str | None = None,
         include_google_map_link: bool = True,
     ) -> str:
-        """
-        Generate HTML report from emergency response data.
+        """Generate HTML report from emergency response data.
 
         Args:
             response_data: Either a dict (from handle_accident) or path to emergency_response_*.json
@@ -37,7 +35,7 @@ class AccidentReportGenerator:
             HTML content as string
         """
         if isinstance(response_data, str):
-            with open(response_data, "r", encoding="utf-8") as f:
+            with open(response_data, encoding="utf-8") as f:
                 data = json.load(f)
         else:
             data = response_data
@@ -70,9 +68,9 @@ class AccidentReportGenerator:
         for h in alt_hospitals:
             alt_rows += f"""
                 <tr>
-                    <td>{h.get('name', '')}</td>
-                    <td>{h.get('distance_km', 0):.2f} km</td>
-                    <td>{h.get('rating', 0):.1f}/5</td>
+                    <td>{h.get("name", "")}</td>
+                    <td>{h.get("distance_km", 0):.2f} km</td>
+                    <td>{h.get("rating", 0):.1f}/5</td>
                 </tr>
             """
 
@@ -124,7 +122,7 @@ class AccidentReportGenerator:
                         <div class="value">{lon:.6f}</div>
                     </div>
                 </div>
-                {f'<a href="{google_map_url}" target="_blank" class="btn">Open in Google Maps</a>' if google_map_url else ''}
+                {f'<a href="{google_map_url}" target="_blank" class="btn">Open in Google Maps</a>' if google_map_url else ""}
             </div>
         </div>
 
@@ -132,17 +130,17 @@ class AccidentReportGenerator:
             <h2>Selected Hospital</h2>
             <div class="card hospital">
                 <div class="label">Name</div>
-                <div class="value" style="font-size: 18px;">{hospital.get('name', '')}</div>
+                <div class="value" style="font-size: 18px;">{hospital.get("name", "")}</div>
                 <div class="label" style="margin-top: 8px;">Rating</div>
                 <div class="stars">{stars_html} ({star_rating:.1f}/5.0)</div>
                 <div class="grid" style="margin-top: 12px;">
                     <div>
                         <div class="label">Address</div>
-                        <div class="value" style="font-size: 14px;">{hospital.get('address', '—')}</div>
+                        <div class="value" style="font-size: 14px;">{hospital.get("address", "—")}</div>
                     </div>
                     <div>
                         <div class="label">Phone</div>
-                        <div class="value">{hospital.get('phone', '—')}</div>
+                        <div class="value">{hospital.get("phone", "—")}</div>
                     </div>
                 </div>
             </div>
@@ -154,18 +152,18 @@ class AccidentReportGenerator:
                 <div class="grid">
                     <div>
                         <div class="label">Distance</div>
-                        <div class="value">{route.get('distance_km', 0):.2f} km</div>
+                        <div class="value">{route.get("distance_km", 0):.2f} km</div>
                     </div>
                     <div>
                         <div class="label">Distance (meters)</div>
-                        <div class="value">{route.get('distance_m', 0)} m</div>
+                        <div class="value">{route.get("distance_m", 0)} m</div>
                     </div>
                 </div>
-                {f'<div class="label" style="margin-top: 12px;">Map file</div><div class="map-file">{data.get("map_file", "—")}</div>' if data.get("map_file") else ''}
+                {f'<div class="label" style="margin-top: 12px;">Map file</div><div class="map-file">{data.get("map_file", "—")}</div>' if data.get("map_file") else ""}
             </div>
         </div>
 
-        {f'<div class="section"><h2>Alternative Hospitals</h2><table><thead><tr><th>Name</th><th>Distance</th><th>Rating</th></tr></thead><tbody>{alt_rows}</tbody></table></div>' if alt_rows.strip() else ''}
+        {f'<div class="section"><h2>Alternative Hospitals</h2><table><thead><tr><th>Name</th><th>Distance</th><th>Rating</th></tr></thead><tbody>{alt_rows}</tbody></table></div>' if alt_rows.strip() else ""}
 
         <div class="footer">
             This report was generated by the Accident Report Generator. Data source: emergency response system.
@@ -198,7 +196,7 @@ class AccidentReportGenerator:
 </body></html>"""
         return html
 
-    def generate_from_json_file(self, json_path: str, output_file: str = None) -> str:
+    def generate_from_json_file(self, json_path: str, output_file: str | None = None) -> str:
         """Convenience: generate report from a saved emergency_response_*.json path."""
         return self.generate_report_html(json_path, output_file=output_file)
 
