@@ -1,254 +1,271 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Emergency Response Route Map</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        #map { height: 100vh; width: 100%; }
-        .info-panel {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: white;
-            padding: 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            z-index: 1000;
-            max-width: 350px;
-            max-height: 85vh;
-            overflow-y: auto;
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+      #map {
+        height: 100vh;
+        width: 100%;
+      }
+      .info-panel {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        max-width: 350px;
+        max-height: 85vh;
+        overflow-y: auto;
+      }
+      .info-panel h3 {
+        margin-top: 0;
+        color: #d32f2f;
+        border-bottom: 2px solid #d32f2f;
+        padding-bottom: 10px;
+      }
+      .hospital-info {
+        background: #f5f5f5;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+      }
+      .hospital-name {
+        font-size: 18px;
+        font-weight: bold;
+        color: #1976d2;
+        margin-bottom: 10px;
+      }
+      .star-rating {
+        font-size: 20px;
+        color: #ffa000;
+        margin: 10px 0;
+      }
+      .route-info {
+        background: #e3f2fd;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+        border-left: 4px solid #2196f3;
+      }
+      .accident-info {
+        background: #ffebee;
+        padding: 15px;
+        border-radius: 5px;
+        margin: 15px 0;
+        border-left: 4px solid #d32f2f;
+      }
+      .metric-item {
+        margin: 8px 0;
+        display: flex;
+        justify-content: space-between;
+      }
+      .metric-label {
+        color: #666;
+        font-weight: 500;
+      }
+      .metric-value {
+        font-weight: bold;
+        color: #333;
+      }
+      .legend {
+        position: absolute;
+        bottom: 30px;
+        left: 10px;
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+      }
+      .legend-item {
+        margin: 8px 0;
+        display: flex;
+        align-items: center;
+      }
+      .legend-icon {
+        width: 20px;
+        height: 20px;
+        margin-right: 10px;
+        border-radius: 50%;
+        border: 2px solid #333;
+      }
+      .route-line {
+        stroke: #2196f3;
+        stroke-width: 5;
+        stroke-opacity: 0.8;
+        fill: none;
+      }
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+          transform: scale(1);
         }
-        .info-panel h3 {
-            margin-top: 0;
-            color: #d32f2f;
-            border-bottom: 2px solid #d32f2f;
-            padding-bottom: 10px;
+        50% {
+          opacity: 0.7;
+          transform: scale(1.2);
         }
-        .hospital-info {
-            background: #f5f5f5;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 15px 0;
+        100% {
+          opacity: 1;
+          transform: scale(1);
         }
-        .hospital-name {
-            font-size: 18px;
-            font-weight: bold;
-            color: #1976d2;
-            margin-bottom: 10px;
-        }
-        .star-rating {
-            font-size: 20px;
-            color: #ffa000;
-            margin: 10px 0;
-        }
-        .route-info {
-            background: #e3f2fd;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 15px 0;
-            border-left: 4px solid #2196f3;
-        }
-        .accident-info {
-            background: #ffebee;
-            padding: 15px;
-            border-radius: 5px;
-            margin: 15px 0;
-            border-left: 4px solid #d32f2f;
-        }
-        .metric-item {
-            margin: 8px 0;
-            display: flex;
-            justify-content: space-between;
-        }
-        .metric-label {
-            color: #666;
-            font-weight: 500;
-        }
-        .metric-value {
-            font-weight: bold;
-            color: #333;
-        }
-        .legend {
-            position: absolute;
-            bottom: 30px;
-            left: 10px;
-            background: white;
-            padding: 15px;
-            border-radius: 8px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-            z-index: 1000;
-        }
-        .legend-item {
-            margin: 8px 0;
-            display: flex;
-            align-items: center;
-        }
-        .legend-icon {
-            width: 20px;
-            height: 20px;
-            margin-right: 10px;
-            border-radius: 50%;
-            border: 2px solid #333;
-        }
-        .route-line {
-            stroke: #2196f3;
-            stroke-width: 5;
-            stroke-opacity: 0.8;
-            fill: none;
-        }
-        @keyframes pulse {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.2); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        .pulse-marker {
-            animation: pulse 2s infinite;
-        }
+      }
+      .pulse-marker {
+        animation: pulse 2s infinite;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="map"></div>
-    
+
     <div class="info-panel">
-        <h3>🚨 Emergency Response Information</h3>
-        
-        <div class="hospital-info">
-            <div class="hospital-name">🏥 HAPPY MOM-Pregnancy to Motherhood</div>
-            <div class="star-rating">
-                Rating: ★★½☆☆ (2.5/5.0)
-            </div>
-            
-            <div class="metric-item">
-                <span class="metric-label">Total Cases:</span>
-                <span class="metric-value">0</span>
-            </div>
-            <div class="metric-item">
-                <span class="metric-label">Success Rate:</span>
-                <span class="metric-value">0.0%</span>
-            </div>
-            <div class="metric-item">
-                <span class="metric-label">Avg Response Time:</span>
-                <span class="metric-value">0.0 min</span>
-            </div>
-            <div class="metric-item">
-                <span class="metric-label">Quality Score:</span>
-                <span class="metric-value">50.0/100</span>
-            </div>
-        
+      <h3>🚨 Emergency Response Information</h3>
+
+      <div class="hospital-info">
+        <div class="hospital-name">🏥 HAPPY MOM-Pregnancy to Motherhood</div>
+        <div class="star-rating">Rating: ★★½☆☆ (2.5/5.0)</div>
+
+        <div class="metric-item">
+          <span class="metric-label">Total Cases:</span>
+          <span class="metric-value">0</span>
         </div>
-        
-        <div class="route-info">
-            <h4 style="margin-top: 0;">📍 Route Information</h4>
-            <div class="metric-item">
-                <span class="metric-label">Distance:</span>
-                <span class="metric-value">0.00 km</span>
-            </div>
-            <div class="metric-item">
-                <span class="metric-label">Status:</span>
-                <span class="metric-value">❌ No Route</span>
-            </div>
+        <div class="metric-item">
+          <span class="metric-label">Success Rate:</span>
+          <span class="metric-value">0.0%</span>
         </div>
-        
-        <div class="accident-info">
-            <h4 style="margin-top: 0;">⚠️ Accident Location</h4>
-            <div class="metric-item">
-                <span class="metric-label">Latitude:</span>
-                <span class="metric-value">13.074000</span>
-            </div>
-            <div class="metric-item">
-                <span class="metric-label">Longitude:</span>
-                <span class="metric-value">80.240000</span>
-            </div>
+        <div class="metric-item">
+          <span class="metric-label">Avg Response Time:</span>
+          <span class="metric-value">0.0 min</span>
         </div>
+        <div class="metric-item">
+          <span class="metric-label">Quality Score:</span>
+          <span class="metric-value">50.0/100</span>
+        </div>
+      </div>
+
+      <div class="route-info">
+        <h4 style="margin-top: 0">📍 Route Information</h4>
+        <div class="metric-item">
+          <span class="metric-label">Distance:</span>
+          <span class="metric-value">0.00 km</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">Status:</span>
+          <span class="metric-value">❌ No Route</span>
+        </div>
+      </div>
+
+      <div class="accident-info">
+        <h4 style="margin-top: 0">⚠️ Accident Location</h4>
+        <div class="metric-item">
+          <span class="metric-label">Latitude:</span>
+          <span class="metric-value">13.074000</span>
+        </div>
+        <div class="metric-item">
+          <span class="metric-label">Longitude:</span>
+          <span class="metric-value">80.240000</span>
+        </div>
+      </div>
     </div>
-    
+
     <div class="legend">
-        <h4 style="margin-top: 0;">Map Legend</h4>
-        <div class="legend-item">
-            <div class="legend-icon" style="background: #d32f2f;"></div>
-            <span><strong>Accident Location</strong></span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-icon" style="background: #1976d2;"></div>
-            <span>Hospital (Starting Point)</span>
-        </div>
-        <div class="legend-item">
-            <div style="width: 30px; height: 5px; background: #2196f3; margin-right: 10px;"></div>
-            <span>Optimal Route</span>
-        </div>
+      <h4 style="margin-top: 0">Map Legend</h4>
+      <div class="legend-item">
+        <div class="legend-icon" style="background: #d32f2f"></div>
+        <span><strong>Accident Location</strong></span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-icon" style="background: #1976d2"></div>
+        <span>Hospital (Starting Point)</span>
+      </div>
+      <div class="legend-item">
+        <div style="width: 30px; height: 5px; background: #2196f3; margin-right: 10px"></div>
+        <span>Optimal Route</span>
+      </div>
     </div>
-    
+
     <script>
-        // Initialize map centered between hospital and accident
-        var centerLat = 13.07343375;
-        var centerLon = 80.240045;
-        var map = L.map('map').setView([centerLat, centerLon], 13);
-        
-        // Add tile layer
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-        
-        // Hospital marker (starting point)
-        var hospitalIcon = L.icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png',
-            iconSize: [35, 50],
-            iconAnchor: [17, 50],
-            popupAnchor: [1, -50]
-        });
-        
-        var hospitalMarker = L.marker([13.0728675, 80.24009], {icon: hospitalIcon})
-            .addTo(map)
-            .bindPopup('<div style="text-align: center;"><b>🏥 HOSPITAL</b><br>' +
-                      '<strong>HAPPY MOM-Pregnancy to Motherhood</strong><br>' +
-                      'Rating: ★★½☆☆ (2.5/5.0)<br>' +
-                      'Lat: 13.072867<br>Lon: 80.240090</div>');
-        
-        // Accident marker (destination) with pulsing effect
-        var accidentIcon = L.icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-            iconSize: [40, 55],
-            iconAnchor: [20, 55],
-            popupAnchor: [1, -55]
-        });
-        
-        var accidentCircle = L.circleMarker([13.074, 80.24], {
-            radius: 18,
-            fillColor: '#d32f2f',
-            color: '#8B0000',
-            weight: 4,
-            opacity: 1,
-            fillOpacity: 0.8,
-            className: 'pulse-marker'
-        }).addTo(map);
-        
-        var accidentMarker = L.marker([13.074, 80.24], {icon: accidentIcon})
-            .addTo(map)
-            .bindPopup('<div style="background: #ff4444; color: white; padding: 15px; border-radius: 5px; text-align: center;">' +
-                      '<b>🚨 ACCIDENT LOCATION 🚨</b><br><br>' +
-                      'Latitude: 13.074000<br>' +
-                      'Longitude: 80.240000<br><br>' +
-                      '<span style="font-size: 12px;">Emergency services dispatched</span></div>');
-        
-        // Draw route if available
-        // No route available
-        
-        // Fit bounds to show both markers and route
-        var bounds = new L.LatLngBounds([
-            [13.074, 80.24],
-            [13.0728675, 80.24009]
-        ]);
-        map.fitBounds(bounds, {padding: [50, 50]});
-        
-        // Open popups
-        hospitalMarker.openPopup();
-        setTimeout(function() {
-            accidentMarker.openPopup();
-        }, 1000);
+      // Initialize map centered between hospital and accident
+      var centerLat = 13.07343375;
+      var centerLon = 80.240045;
+      var map = L.map("map").setView([centerLat, centerLon], 13);
+
+      // Add tile layer
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap contributors",
+      }).addTo(map);
+
+      // Hospital marker (starting point)
+      var hospitalIcon = L.icon({
+        iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-blue.png",
+        iconSize: [35, 50],
+        iconAnchor: [17, 50],
+        popupAnchor: [1, -50],
+      });
+
+      var hospitalMarker = L.marker([13.0728675, 80.24009], { icon: hospitalIcon })
+        .addTo(map)
+        .bindPopup(
+          '<div style="text-align: center;"><b>🏥 HOSPITAL</b><br>' +
+            "<strong>HAPPY MOM-Pregnancy to Motherhood</strong><br>" +
+            "Rating: ★★½☆☆ (2.5/5.0)<br>" +
+            "Lat: 13.072867<br>Lon: 80.240090</div>",
+        );
+
+      // Accident marker (destination) with pulsing effect
+      var accidentIcon = L.icon({
+        iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+        iconSize: [40, 55],
+        iconAnchor: [20, 55],
+        popupAnchor: [1, -55],
+      });
+
+      var accidentCircle = L.circleMarker([13.074, 80.24], {
+        radius: 18,
+        fillColor: "#d32f2f",
+        color: "#8B0000",
+        weight: 4,
+        opacity: 1,
+        fillOpacity: 0.8,
+        className: "pulse-marker",
+      }).addTo(map);
+
+      var accidentMarker = L.marker([13.074, 80.24], { icon: accidentIcon })
+        .addTo(map)
+        .bindPopup(
+          '<div style="background: #ff4444; color: white; padding: 15px; border-radius: 5px; text-align: center;">' +
+            "<b>🚨 ACCIDENT LOCATION 🚨</b><br><br>" +
+            "Latitude: 13.074000<br>" +
+            "Longitude: 80.240000<br><br>" +
+            '<span style="font-size: 12px;">Emergency services dispatched</span></div>',
+        );
+
+      // Draw route if available
+      // No route available
+
+      // Fit bounds to show both markers and route
+      var bounds = new L.LatLngBounds([
+        [13.074, 80.24],
+        [13.0728675, 80.24009],
+      ]);
+      map.fitBounds(bounds, { padding: [50, 50] });
+
+      // Open popups
+      hospitalMarker.openPopup();
+      setTimeout(function () {
+        accidentMarker.openPopup();
+      }, 1000);
     </script>
-</body>
+  </body>
 </html>
