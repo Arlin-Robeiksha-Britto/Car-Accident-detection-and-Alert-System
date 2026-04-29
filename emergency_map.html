@@ -1,269 +1,309 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
-<head>
+  <head>
     <title>Emergency Response Map</title>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
-        body { margin: 0; padding: 0; font-family: Arial, sans-serif; }
-        #map { height: 100vh; width: 100%; }
-        .info-panel {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: white;
-            padding: 15px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            z-index: 1000;
-            max-width: 300px;
-            max-height: 80vh;
-            overflow-y: auto;
+      body {
+        margin: 0;
+        padding: 0;
+        font-family: Arial, sans-serif;
+      }
+      #map {
+        height: 100vh;
+        width: 100%;
+      }
+      .info-panel {
+        position: absolute;
+        top: 10px;
+        right: 10px;
+        background: white;
+        padding: 15px;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+        max-width: 300px;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+      .accident-legend {
+        position: absolute;
+        bottom: 30px;
+        left: 10px;
+        background: white;
+        padding: 10px;
+        border-radius: 5px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        z-index: 1000;
+      }
+      .legend-item {
+        margin: 5px 0;
+        display: flex;
+        align-items: center;
+      }
+      .legend-dot {
+        width: 15px;
+        height: 15px;
+        border-radius: 50%;
+        margin-right: 8px;
+        border: 2px solid #333;
+      }
+      .accident-dot {
+        background: #ff0000;
+        animation: pulse 2s infinite;
+      }
+      @keyframes pulse {
+        0% {
+          opacity: 1;
+          transform: scale(1);
         }
-        .accident-legend {
-            position: absolute;
-            bottom: 30px;
-            left: 10px;
-            background: white;
-            padding: 10px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
-            z-index: 1000;
+        50% {
+          opacity: 0.7;
+          transform: scale(1.1);
         }
-        .legend-item {
-            margin: 5px 0;
-            display: flex;
-            align-items: center;
+        100% {
+          opacity: 1;
+          transform: scale(1);
         }
-        .legend-dot {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            margin-right: 8px;
-            border: 2px solid #333;
-        }
-        .accident-dot {
-            background: #ff0000;
-            animation: pulse 2s infinite;
-        }
-        @keyframes pulse {
-            0% { opacity: 1; transform: scale(1); }
-            50% { opacity: 0.7; transform: scale(1.1); }
-            100% { opacity: 1; transform: scale(1); }
-        }
-        .service-item {
-            margin: 10px 0;
-            padding: 8px;
-            border-left: 3px solid #007bff;
-            background: #f8f9fa;
-        }
-        .accident-marker { color: red; font-weight: bold; }
+      }
+      .service-item {
+        margin: 10px 0;
+        padding: 8px;
+        border-left: 3px solid #007bff;
+        background: #f8f9fa;
+      }
+      .accident-marker {
+        color: red;
+        font-weight: bold;
+      }
     </style>
-</head>
-<body>
+  </head>
+  <body>
     <div id="map"></div>
     <div class="info-panel">
-        <h3 style="color: #ff4444; margin-top: 0;">🚨 Emergency Services</h3>
-        <div id="services-list"></div>
+      <h3 style="color: #ff4444; margin-top: 0">🚨 Emergency Services</h3>
+      <div id="services-list"></div>
     </div>
     <div class="accident-legend">
-        <h4 style="margin-top: 0; margin-bottom: 10px;">Legend</h4>
-        <div class="legend-item">
-            <div class="legend-dot accident-dot"></div>
-            <span><strong>Accident Location</strong></span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-dot" style="background: #0066cc;"></div>
-            <span>Police Station</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-dot" style="background: #cc0000;"></div>
-            <span>Hospital</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-dot" style="background: #ff6600;"></div>
-            <span>Fire Station</span>
-        </div>
-        <div class="legend-item">
-            <div class="legend-dot" style="background: #00cc00;"></div>
-            <span>Other Services</span>
-        </div>
+      <h4 style="margin-top: 0; margin-bottom: 10px">Legend</h4>
+      <div class="legend-item">
+        <div class="legend-dot accident-dot"></div>
+        <span><strong>Accident Location</strong></span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: #0066cc"></div>
+        <span>Police Station</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: #cc0000"></div>
+        <span>Hospital</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: #ff6600"></div>
+        <span>Fire Station</span>
+      </div>
+      <div class="legend-item">
+        <div class="legend-dot" style="background: #00cc00"></div>
+        <span>Other Services</span>
+      </div>
     </div>
-    
+
     <script>
-        // Initialize map
-        var map = L.map('map').setView([13.074, 80.24], 13);
-        
-        // Add tile layer
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap contributors'
-        }).addTo(map);
-        
-        // Add accident marker with red circle
-        var accidentIcon = L.icon({
-            iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png',
-            iconSize: [35, 50],
-            iconAnchor: [17, 50],
-            popupAnchor: [1, -50]
+      // Initialize map
+      var map = L.map("map").setView([13.074, 80.24], 13);
+
+      // Add tile layer
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        attribution: "© OpenStreetMap contributors",
+      }).addTo(map);
+
+      // Add accident marker with red circle
+      var accidentIcon = L.icon({
+        iconUrl: "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-red.png",
+        iconSize: [35, 50],
+        iconAnchor: [17, 50],
+        popupAnchor: [1, -50],
+      });
+
+      // Create red circle marker for accident location
+      var accidentCircle = L.circleMarker([13.074, 80.24], {
+        radius: 15,
+        fillColor: "#ff0000",
+        color: "#8B0000",
+        weight: 4,
+        opacity: 1,
+        fillOpacity: 0.8,
+      }).addTo(map);
+
+      var accidentMarker = L.marker([13.074, 80.24], { icon: accidentIcon })
+        .addTo(map)
+        .bindPopup(
+          '<div style="background: #ff4444; color: white; padding: 10px; border-radius: 5px;"><b>🚨 ACCIDENT LOCATION 🚨</b><br><br>Latitude: 13.074<br>Longitude: 80.24<br><br><span style="font-size: 12px;">Emergency services are being notified</span></div>',
+        );
+
+      // Add pulsing animation to accident marker
+      accidentCircle.on("add", function () {
+        setInterval(function () {
+          accidentCircle.setStyle({
+            radius: accidentCircle.options.radius === 15 ? 20 : 15,
+            fillOpacity: accidentCircle.options.fillOpacity === 0.8 ? 0.4 : 0.8,
+          });
+        }, 1000);
+      });
+
+      // Open accident popup by default
+      accidentMarker.openPopup();
+
+      // Service markers
+      var services = [
+        {
+          lat: 13.0706318,
+          lon: 80.2319497,
+          name: "Police Station Aminjikarai",
+          category: "Police Station",
+          distance: 0.95,
+          phone: "N/A",
+          icon: "blue",
+        },
+        {
+          lat: 13.078314,
+          lon: 80.2488511,
+          name: "Kilpauk G3 Police station",
+          category: "Police Station",
+          distance: 1.09,
+          phone: "044 2836 2307",
+          icon: "blue",
+        },
+        {
+          lat: 13.0660198,
+          lon: 80.2323165,
+          name: "Police Chauki",
+          category: "Police Station",
+          distance: 1.22,
+          phone: "N/A",
+          icon: "blue",
+        },
+        {
+          lat: 13.0623369,
+          lon: 80.2276779,
+          name: "Choolaimedu Police Station",
+          category: "Police Station",
+          distance: 1.87,
+          phone: "044 2345 2742",
+          icon: "blue",
+        },
+        {
+          lat: 13.059662,
+          lon: 80.2428493,
+          name: "F3 Police Station",
+          category: "Police Station",
+          distance: 2.39,
+          phone: "044 2345 2680",
+          icon: "blue",
+        },
+        {
+          lat: 13.079934,
+          lon: 80.2625644,
+          name: "Railway Police",
+          category: "Police Station",
+          distance: 2.82,
+          phone: "078702 70641",
+          icon: "blue",
+        },
+        {
+          lat: 13.0812021,
+          lon: 80.2631902,
+          name: "Office of Commissioner of Police",
+          category: "Police Station",
+          distance: 2.97,
+          phone: "044 2345 2380",
+          icon: "blue",
+        },
+        {
+          lat: 13.0687214,
+          lon: 80.213805,
+          name: "K8 Arumbakkam Police Station",
+          category: "Police Station",
+          distance: 3.05,
+          phone: "044 2345 2733",
+          icon: "blue",
+        },
+        {
+          lat: 13.0526462,
+          lon: 80.2434255,
+          name: "Chennai Traffic Police",
+          category: "Police Station",
+          distance: 3.08,
+          phone: "098400 00103",
+          icon: "blue",
+        },
+        {
+          lat: 13.0850167,
+          lon: 80.2148914,
+          name: "Office of the I.G. of Police, Economic Offences Wing,",
+          category: "Police Station",
+          distance: 3.11,
+          phone: "N/A",
+          icon: "blue",
+        },
+      ];
+
+      // Add service markers
+      services.forEach(function (service, index) {
+        var icon = L.icon({
+          iconUrl:
+            "https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-" +
+            service.icon +
+            ".png",
+          iconSize: [25, 41],
+          iconAnchor: [12, 41],
+          popupAnchor: [1, -34],
         });
-        
-        // Create red circle marker for accident location
-        var accidentCircle = L.circleMarker([13.074, 80.24], {
-            radius: 15,
-            fillColor: '#ff0000',
-            color: '#8B0000',
-            weight: 4,
-            opacity: 1,
-            fillOpacity: 0.8
-        }).addTo(map);
-        
-        var accidentMarker = L.marker([13.074, 80.24], {icon: accidentIcon})
-            .addTo(map)
-            .bindPopup('<div style="background: #ff4444; color: white; padding: 10px; border-radius: 5px;"><b>🚨 ACCIDENT LOCATION 🚨</b><br><br>Latitude: 13.074<br>Longitude: 80.24<br><br><span style="font-size: 12px;">Emergency services are being notified</span></div>');
-        
-        // Add pulsing animation to accident marker
-        accidentCircle.on('add', function() {
-            setInterval(function() {
-                accidentCircle.setStyle({
-                    radius: accidentCircle.options.radius === 15 ? 20 : 15,
-                    fillOpacity: accidentCircle.options.fillOpacity === 0.8 ? 0.4 : 0.8
-                });
-            }, 1000);
-        });
-        
-        // Open accident popup by default
-        accidentMarker.openPopup();
-        
-        // Service markers
-        var services = [
-        {
-            lat: 13.0706318,
-            lon: 80.2319497,
-            name: 'Police Station Aminjikarai',
-            category: 'Police Station',
-            distance: 0.95,
-            phone: 'N/A',
-            icon: 'blue'
-        },
-        {
-            lat: 13.078314,
-            lon: 80.2488511,
-            name: 'Kilpauk G3 Police station',
-            category: 'Police Station',
-            distance: 1.09,
-            phone: '044 2836 2307',
-            icon: 'blue'
-        },
-        {
-            lat: 13.0660198,
-            lon: 80.2323165,
-            name: 'Police Chauki',
-            category: 'Police Station',
-            distance: 1.22,
-            phone: 'N/A',
-            icon: 'blue'
-        },
-        {
-            lat: 13.0623369,
-            lon: 80.2276779,
-            name: 'Choolaimedu Police Station',
-            category: 'Police Station',
-            distance: 1.87,
-            phone: '044 2345 2742',
-            icon: 'blue'
-        },
-        {
-            lat: 13.059662,
-            lon: 80.2428493,
-            name: 'F3 Police Station',
-            category: 'Police Station',
-            distance: 2.39,
-            phone: '044 2345 2680',
-            icon: 'blue'
-        },
-        {
-            lat: 13.079934,
-            lon: 80.2625644,
-            name: 'Railway Police',
-            category: 'Police Station',
-            distance: 2.82,
-            phone: '078702 70641',
-            icon: 'blue'
-        },
-        {
-            lat: 13.0812021,
-            lon: 80.2631902,
-            name: 'Office of Commissioner of Police',
-            category: 'Police Station',
-            distance: 2.97,
-            phone: '044 2345 2380',
-            icon: 'blue'
-        },
-        {
-            lat: 13.0687214,
-            lon: 80.213805,
-            name: 'K8 Arumbakkam Police Station',
-            category: 'Police Station',
-            distance: 3.05,
-            phone: '044 2345 2733',
-            icon: 'blue'
-        },
-        {
-            lat: 13.0526462,
-            lon: 80.2434255,
-            name: 'Chennai Traffic Police',
-            category: 'Police Station',
-            distance: 3.08,
-            phone: '098400 00103',
-            icon: 'blue'
-        },
-        {
-            lat: 13.0850167,
-            lon: 80.2148914,
-            name: 'Office of the I.G. of Police, Economic Offences Wing,',
-            category: 'Police Station',
-            distance: 3.11,
-            phone: 'N/A',
-            icon: 'blue'
-        }
-        ];
-        
-        // Add service markers
-        services.forEach(function(service, index) {
-            var icon = L.icon({
-                iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-' + service.icon + '.png',
-                iconSize: [25, 41],
-                iconAnchor: [12, 41],
-                popupAnchor: [1, -34]
-            });
-            
-            var marker = L.marker([service.lat, service.lon], {icon: icon})
-                .addTo(map)
-                .bindPopup('<b>' + service.category + '</b><br>' + 
-                          service.name + '<br>' +
-                          'Distance: ' + service.distance + ' km<br>' +
-                          'Phone: ' + service.phone);
-            
-            // Add to info panel
-            var serviceDiv = document.createElement('div');
-            serviceDiv.className = 'service-item';
-            serviceDiv.innerHTML = '<strong>' + (index + 1) + '. ' + service.category + '</strong><br>' +
-                                   service.name + '<br>' +
-                                   '<small>Distance: ' + service.distance + ' km</small>';
-            document.getElementById('services-list').appendChild(serviceDiv);
-        });
-        
-        // Fit bounds to show all markers (with accident location centered)
-        var group = new L.featureGroup([accidentMarker, accidentCircle]);
-        services.forEach(function(service) {
-            group.addLayer(L.marker([service.lat, service.lon]));
-        });
-        map.fitBounds(group.getBounds().pad(0.15));
-        
-        // Center map on accident location initially
-        map.setView([13.074, 80.24], 14);
+
+        var marker = L.marker([service.lat, service.lon], { icon: icon })
+          .addTo(map)
+          .bindPopup(
+            "<b>" +
+              service.category +
+              "</b><br>" +
+              service.name +
+              "<br>" +
+              "Distance: " +
+              service.distance +
+              " km<br>" +
+              "Phone: " +
+              service.phone,
+          );
+
+        // Add to info panel
+        var serviceDiv = document.createElement("div");
+        serviceDiv.className = "service-item";
+        serviceDiv.innerHTML =
+          "<strong>" +
+          (index + 1) +
+          ". " +
+          service.category +
+          "</strong><br>" +
+          service.name +
+          "<br>" +
+          "<small>Distance: " +
+          service.distance +
+          " km</small>";
+        document.getElementById("services-list").appendChild(serviceDiv);
+      });
+
+      // Fit bounds to show all markers (with accident location centered)
+      var group = new L.featureGroup([accidentMarker, accidentCircle]);
+      services.forEach(function (service) {
+        group.addLayer(L.marker([service.lat, service.lon]));
+      });
+      map.fitBounds(group.getBounds().pad(0.15));
+
+      // Center map on accident location initially
+      map.setView([13.074, 80.24], 14);
     </script>
-</body>
+  </body>
 </html>

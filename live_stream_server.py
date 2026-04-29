@@ -2,16 +2,15 @@
 Live accident video stream server.
 Streams detection source to emergency dashboard and assigned hospital (same stream URL).
 Run: python live_stream_server.py
-Dashboard: http://127.0.0.1:5000/
+Dashboard: http://127.0.0.1:5000/.
 """
 
-import os
-import time
 import threading
+import time
 from pathlib import Path
 
 try:
-    from flask import Flask, Response, render_template_string, jsonify, request
+    from flask import Flask, Response, jsonify, render_template_string, request
 except ImportError:
     print("Install Flask: pip install flask")
     raise
@@ -113,6 +112,7 @@ def index():
 @app.route("/video_feed")
 def video_feed():
     """MJPEG stream for live accident video."""
+
     def generate():
         while True:
             with _lock:
@@ -123,6 +123,7 @@ def video_feed():
                 # Placeholder: single black frame
                 yield (b"--frame\r\nContent-Type: image/jpeg\r\n\r\n" + b"" + b"\r\n")
             time.sleep(0.05)
+
     return Response(generate(), mimetype="multipart/x-mixed-replace; boundary=frame")
 
 
@@ -130,13 +131,15 @@ def video_feed():
 def api_alert():
     """Current alert info for dashboard (assigned hospital, map links)."""
     a = get_current_alert()
-    return jsonify({
-        "accident_id": a.get("accident_id"),
-        "hospital": a.get("hospital"),
-        "map_leaflet": a.get("map_leaflet"),
-        "map_google": a.get("map_google"),
-        "timestamp": a.get("timestamp"),
-    })
+    return jsonify(
+        {
+            "accident_id": a.get("accident_id"),
+            "hospital": a.get("hospital"),
+            "map_leaflet": a.get("map_leaflet"),
+            "map_google": a.get("map_google"),
+            "timestamp": a.get("timestamp"),
+        }
+    )
 
 
 def run_server(host="0.0.0.0", port=5000):
